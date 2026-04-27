@@ -1,0 +1,1 @@
+import{f as e,i as t,r as n}from"./AuthContext-CwAPZXFj.js";var r=e(t(),1),i=n(),a=({valorFinal:e,duracion:t=1e3})=>{let[n,a]=(0,r.useState)(0);return(0,r.useEffect)(()=>{let n=null,r=i=>{n||=i;let o=Math.min((i-n)/t,1);a(e*(1-(1-o)**4)),o<1?window.requestAnimationFrame(r):a(e)};window.requestAnimationFrame(r)},[e,t]),(0,i.jsx)(`span`,{children:n.toFixed(2)})};export{a as t};
