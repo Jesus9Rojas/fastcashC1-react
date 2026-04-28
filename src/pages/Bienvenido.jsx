@@ -4,7 +4,6 @@ import { AuthContext } from '../context/AuthContext';
 import logoAnimado from '../assets/img/img/LogoYapeRojas.png'; 
 import Gatito from '../assets/img/img/Tolon.png';
 
-// 1. Calculamos el saludo FUERA del efecto para evitar dobles renderizados
 const obtenerSaludo = () => {
     const hora = new Date().getHours();
     if (hora < 12) return 'Buenos días';
@@ -17,8 +16,6 @@ const Bienvenida = () => {
     const navigate = useNavigate();
     
     const [cargando, setCargando] = useState(true);
-    
-    // 2. Asignamos el saludo directamente en el estado inicial
     const [saludo] = useState(obtenerSaludo());
 
     useEffect(() => {
@@ -29,7 +26,6 @@ const Bienvenida = () => {
         return () => clearTimeout(timer);
     }, []);
 
-    // 3. PANTALLA DE CARGA CON LOGO ANIMADO
     if (cargando) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexDirection: 'column' }}>
@@ -61,17 +57,12 @@ const Bienvenida = () => {
     // Obtenemos el primer nombre del usuario para la burbuja
     const primerNombre = usuario?.nombreCompleto?.split(' ')[0] || 'Humano';
 
-    // 4. DASHBOARD DE BIENVENIDA MODERNO
     return (
         <div style={{ animation: 'fadeIn 0.6s ease-out' }}>
             
-            <div style={{ 
-                background: 'linear-gradient(135deg, var(--color-primario) 0%, #8b0000 100%)', 
-                borderRadius: '20px', padding: '3rem', color: 'white', marginBottom: '2.5rem',
-                boxShadow: '0 10px 25px rgba(230,0,35,0.2)',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-            }}>
-                <div style={{ flex: 1 }}>
+            {/* 👇 Cambiamos los estilos en línea por la clase 'card-bienvenida' para controlar el responsivo 👇 */}
+            <div className="card-bienvenida">
+                <div className="texto-bienvenida">
                     <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', fontWeight: '800' }}>
                         {saludo}, {primerNombre} 👋
                     </h1>
@@ -80,19 +71,11 @@ const Bienvenida = () => {
                     </p>
                 </div>
 
-                {/* 🚀 CONTENEDOR DEL GATITO CON TAMAÑO RESTAURADO */}
-                <div style={{ 
-                    position: 'relative', 
-                    width: '230px', height: '180px', // <- Medidas originales restauradas
-                    marginLeft: '2rem', flexShrink: 0
-                }}>
-                    
-                    {/* 👇 LA BURBUJA A LA IZQUIERDA 👇 */}
+                <div className="contenedor-gatito">
                     <div className="burbuja-gato">
                         ¡Miau! Bienvenido, <br/> <span style={{color: 'var(--color-primario)'}}>{primerNombre}</span> 🐾
                     </div>
-
-                    <img src={Gatito} alt="Gatito Tolon" style={{width: '100%', height: '100%', borderRadius: '15px', objectFit: 'cover'}} />
+                    <img src={Gatito} alt="Gatito Tolon" style={{width: '100%', height: '100%', borderRadius: '15px', objectFit: 'contain'}} />
                 </div>
             </div>
 
@@ -100,9 +83,7 @@ const Bienvenida = () => {
                 Accesos Rápidos
             </h3>
             
-            {/* Grid de Tarjetas de Acción */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
-                
                 <div className="card-accion" onClick={() => navigate('/yape')} style={{ background: 'var(--color-header)', padding: '1.5rem', borderRadius: '16px', boxShadow: 'var(--sombra-md)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', border: '1px solid var(--border-color)' }} onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--sombra-lg)' }} onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--sombra-md)' }}>
                     <div style={{ background: '#f3e8ff', width: '55px', height: '55px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9333ea', fontSize: '1.5rem', marginBottom: '1rem' }}>
                         <i className="fa-solid fa-qrcode"></i>
@@ -126,7 +107,6 @@ const Bienvenida = () => {
                     <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--texto-principal)', fontSize: '1.1rem' }}>Historial</h4>
                     <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--texto-secundario)' }}>Revisar o anular operaciones</p>
                 </div>
-
             </div>
             
             <style>
@@ -137,13 +117,40 @@ const Bienvenida = () => {
                     }
 
                     /* =========================================
-                       ESTILOS DE LA BURBUJA DEL GATITO (IZQUIERDA)
+                       DISEÑO DE LA TARJETA PRINCIPAL (DESKTOP)
+                       ========================================= */
+                    .card-bienvenida {
+                        background: linear-gradient(135deg, var(--color-primario) 0%, #8b0000 100%);
+                        border-radius: 20px;
+                        padding: 3rem;
+                        color: white;
+                        margin-bottom: 2.5rem;
+                        box-shadow: 0 10px 25px rgba(230,0,35,0.2);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    .texto-bienvenida {
+                        flex: 1;
+                    }
+
+                    .contenedor-gatito {
+                        position: relative;
+                        width: 230px;
+                        height: 180px;
+                        margin-left: 2rem;
+                        flex-shrink: 0;
+                    }
+
+                    /* =========================================
+                       ESTILOS DE LA BURBUJA (DESKTOP: A LA IZQUIERDA)
                        ========================================= */
                     .burbuja-gato {
                         position: absolute;
                         top: 30px; 
                         right: 100%; 
-                        margin-right: -50px; 
+                        margin-right: -40px; 
                         width: max-content; 
                         background: #ffffff;
                         color: #333333;
@@ -157,7 +164,6 @@ const Bienvenida = () => {
                         animation: flotarBurbuja 3s ease-in-out infinite; 
                     }
 
-                    
                     .burbuja-gato::after {
                         content: '';
                         position: absolute;
@@ -175,6 +181,57 @@ const Bienvenida = () => {
                         0% { transform: translateY(0px); }
                         50% { transform: translateY(-8px); }
                         100% { transform: translateY(0px); }
+                    }
+
+                    /* =========================================
+                       DISEÑO RESPONSIVO (CELULARES Y TABLETS)
+                       ========================================= */
+                    @media (max-width: 768px) {
+                        .card-bienvenida {
+                            flex-direction: column;
+                            text-align: center;
+                            padding: 2rem 1.5rem;
+                            gap: 3rem; /* Da espacio para que la burbuja no tape el texto */
+                        }
+
+                        .contenedor-gatito {
+                            margin-left: 0;
+                            width: 200px; /* Gatito un poco más pequeño en celular */
+                            height: 140px;
+                            margin-top: 0.5rem; /* Ajusta el espacio entre el texto y el gatito */
+                        }
+
+                        .texto-bienvenida h1 {
+                            font-size: 2rem !important; /* Texto un poco más pequeño */
+                        }
+
+                        /* Burbuja pasa arriba del gatito en celular */
+                        .burbuja-gato {
+                            top: -25px;
+                            right: auto;
+                            left: 50%;
+                            margin-right: 0;
+                            transform: translateX(-50%);
+                            animation: flotarBurbujaMobile 3s ease-in-out infinite;
+                        }
+
+                        /* Piquito de la burbuja apunta hacia abajo */
+                        .burbuja-gato::after {
+                            top: auto;
+                            bottom: -10px;
+                            right: auto;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            border-width: 12px 10px 0 10px;
+                            border-color: #ffffff transparent transparent transparent;
+                        }
+                    }
+
+                    /* Animación adaptada para no perder el centrado en celular */
+                    @keyframes flotarBurbujaMobile {
+                        0% { transform: translate(-50%, 0px); }
+                        50% { transform: translate(-50%, -8px); }
+                        100% { transform: translate(-50%, 0px); }
                     }
                 `}
             </style>
