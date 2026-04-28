@@ -1,0 +1,1 @@
+var e=`/fastcashC1-react/assets/Caminando-CLmqF7mv.gif`;export{e as t};
