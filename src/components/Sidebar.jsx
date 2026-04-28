@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 // Tus importaciones exactas
-import logo from '../assets/img/img/logorojasya2.png';
+import logo from '../assets/img/img/LogoYapeRojas.png';
 import avatar from '../assets/img/icon/mujer.png';
 import transferencia from '../assets/img/icon/transferencia-movil.png';
 import tarjeta from '../assets/img/icon/tarjeta-icon.png';

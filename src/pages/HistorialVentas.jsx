@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { createPortal } from 'react-dom'; // 🚀 IMPORTANTE: Añadimos el portal
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import Swal from 'sweetalert2';
@@ -13,8 +14,19 @@ const HistorialVentas = () => {
     const [usuariosFiltro, setUsuariosFiltro] = useState([]);
     const [filtroSeleccionado, setFiltroSeleccionado] = useState('');
 
+    // 👇 ESTADO PARA CONTROLAR EL ARAÑAZO
+    const [mostrarTransicion, setMostrarTransicion] = useState(false);
+
     // Verificamos de forma segura si el rol es Administrador
     const esAdmin = String(usuario?.rol || '').toUpperCase() === 'ADMINISTRADOR';
+
+    // Disparador de la transición al entrar a la vista
+    useEffect(() => {
+        const timer = setTimeout(() => {
+             setMostrarTransicion(true);
+        }, 100); 
+        return () => clearTimeout(timer);
+    }, []);
 
     // 1. Cargar Usuarios para el filtro (Solo si es Admin)
     useEffect(() => {
@@ -123,6 +135,17 @@ const HistorialVentas = () => {
 
     return (
         <section className="vista-seccion activa">
+            
+            {/* 🚀 EL PORTAL: Transición épica al abrir el historial */}
+            {mostrarTransicion && createPortal(
+                <div className="efecto-transicion-arañazo">
+                    <div className="garra-corte garra-1"></div>
+                    <div className="garra-corte garra-2"></div>
+                    <div className="garra-corte garra-3"></div>
+                </div>,
+                document.body
+            )}
+
             <div className="contenedor-tabla-registro">
                 
                 {/* --- CABECERA --- */}
@@ -144,11 +167,9 @@ const HistorialVentas = () => {
                             >
                                 <option value="">-- Ver Todos --</option>
                                 {usuariosFiltro.map(u => {
-                                    // Omni-lectura idéntica a tu JS original
                                     const uid = u.usuarioID || u.UsuarioID || u.usuarioId || u.usuarioid || u.id;
                                     const nombre = u.nombreCompleto || u.NombreCompleto || u.username;
                                     
-                                    // Solo renderiza si encontró un ID válido
                                     if (uid !== undefined) {
                                         return <option key={uid} value={uid}>{nombre}</option>;
                                     }
@@ -185,7 +206,6 @@ const HistorialVentas = () => {
                                 <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>📭 No hay ventas hoy.</td></tr>
                             ) : (
                                 ventas.map(v => {
-                                    // Omni-lectura
                                     const vID = v.ventaid || v.VentaID || v.ventaID;
                                     const cajero = v.cajero || v.Cajero || 'Sistema';
                                     const familia = v.familia || v.Familia || 'Varios';
@@ -194,7 +214,6 @@ const HistorialVentas = () => {
                                     const estado = String(v.estado || v.Estado || '').toUpperCase();
                                     const esAnulado = estado === 'ANULADO';
                                     
-                                    // Formatear Hora
                                     const fechaEmision = v.fechaemision || v.FechaEmision || v.fechaEmision;
                                     const horaFormateada = fechaEmision ? new Date(fechaEmision).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) : '--:--';
 

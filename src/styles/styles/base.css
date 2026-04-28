@@ -260,9 +260,9 @@ body[data-theme="dark"] .menu-temas {
 .color-dot.red { background: #dc2626; }
 
 .logo-ticket {
-        width: 250px !important; 
+        width: 110px !important; 
         height: auto !important;
-        margin: 0px auto 0PX !important; 
+        margin: 9px auto 3PX !important; 
         display: block !important;
         filter: grayscale(100%) contrast(1.5) brightness(1.2) !important; 
     }
@@ -341,9 +341,9 @@ body[data-theme="dark"] .menu-temas {
 
     /* 5. LOGO */
     .logo-ticket {
-        width: 220px !important; 
+        width:110px !important; 
         height: auto !important;
-        margin: 5px auto !important; 
+        margin: 9px auto 3PX !important; 
         display: block !important;
         filter: grayscale(100%) contrast(1.5) !important; 
     }

@@ -5,7 +5,7 @@ import ContadorAnimado from '../components/ContadorAnimado';
 import api from '../services/api';
 import Swal from 'sweetalert2';
 import html2pdf from 'html2pdf.js';
-import logoTicket from '../assets/img/img/logorojasya2.png';
+import logoTicket from '../assets/img/img/LogoYapeRojas.png';
 import yapeIcon from '../assets/img/icon/codigo-qr-icon.png'
 import tarjetaIcon from '../assets/img/icon/tarjeta-icon.png';  
 import transfIcon from '../assets/img/icon/transferencia-movil.png'
@@ -226,9 +226,9 @@ const CierreCaja = () => {
                         <div ref={ticketRef} id="ticketImpresion" className="ticket-paper">
                             <div className="ticket-header">
                                 <img src={logoTicket} className="logo-ticket" alt="Logo" />
-                                <h3>ROJAS YA S.A.C</h3>
-                                <p>RUC: 20611647299</p>
-                                <p>A.V ZARUMILLA S/N (FABRICA EX-SINALCO)</p>
+                                <h3>ROJAS SUPER NV</h3>
+                                <p>RUC: 20606916061</p>
+                                <p>MZA-A23 LT.13 A.H MARIA REICHE</p>
                                 <div className="separator-dashed"></div>
                                 <h4>CIERRE DE TURNO</h4>
                                 <div className="ticket-meta">

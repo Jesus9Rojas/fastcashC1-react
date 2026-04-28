@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { createPortal } from 'react-dom'; // 🚀 IMPORTANTE: Añadimos esto
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import Swal from 'sweetalert2';
@@ -27,7 +28,15 @@ const VentaTransferencia = () => {
     const [numOperacion, setNumOperacion] = useState('');
     const [cargando, setCargando] = useState(false);
 
+    // 👇 ESTADO PARA CONTROLAR EL ARAÑAZO
+    const [mostrarTransicion, setMostrarTransicion] = useState(false);
+
     useEffect(() => {
+        // Al montar el componente, un pequeño retraso asegura que la bolita de carga termine primero
+        const timer = setTimeout(() => {
+             setMostrarTransicion(true);
+        }, 100); 
+
         const cargarDatos = async () => {
             try {
                 const resBancos = await api.get('/maestros/entidades');
@@ -50,7 +59,10 @@ const VentaTransferencia = () => {
                 console.error("Error cargando bancos:", error);
             }
         };
+        
         cargarDatos();
+        
+        return () => clearTimeout(timer);
     }, []);
 
     const handleRegistrarVenta = async (e) => {
@@ -125,7 +137,19 @@ const VentaTransferencia = () => {
 
     return (
         <section className="vista-seccion activa" style={{ opacity: cajaAbierta ? 1 : 0.5, pointerEvents: cajaAbierta ? 'all' : 'none' }}>
-            <div className="contenedor-ventas-pro">
+            
+            {/* 🚀 EL PORTAL: Saca la animación de la caja fuerte y la tira encima de toda la web */}
+            {mostrarTransicion && createPortal(
+                <div className="efecto-transicion-arañazo">
+                    <div className="garra-corte garra-1"></div>
+                    <div className="garra-corte garra-2"></div>
+                    <div className="garra-corte garra-3"></div>
+                </div>,
+                document.body // Esto le dice que lo ponga al nivel máximo de la página
+            )}
+
+            {/* Añadimos position: 'relative' por consistencia con tus otras vistas */}
+            <div className="contenedor-ventas-pro" style={{ position: 'relative' }}>
                 
                 <div className="panel-transaccion-pro" style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
                     

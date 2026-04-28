@@ -1,21 +1,22 @@
 import { useState, useEffect, useContext } from 'react';
+import { createPortal } from 'react-dom'; // 🚀 IMPORTANTE: Añadimos esto
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import gatitoGif from '../assets/img/img/Caminando.gif';
 
 const Toast = Swal.mixin({
     toast: true,
-    position: 'top-end', // Aparece arriba a la derecha
+    position: 'top-end', 
     showConfirmButton: false,
-    timer: 3000, // Desaparece en 3 segundos
+    timer: 3000, 
     timerProgressBar: true,
     didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer; // Pausa si le pones el mouse encima
+        toast.onmouseenter = Swal.stopTimer; 
         toast.onmouseleave = Swal.resumeTimer;
     }
 });
 
-// 1. REPLICAMOS TU MAPA DE ICONOS ORIGINAL
 const MAPA_ICONOS_VENTAS = {
     'Comestibles': '🛒', 'Bebidas': '🥤', 'Licores': '🍷',
     'Limpieza': '🧹', 'Cuidado Personal': '🧴', 'Frescos': '🥦',
@@ -36,18 +37,24 @@ const VentaYape = () => {
     const [comprobante, setComprobante] = useState('2'); 
     const [numOperacion, setNumOperacion] = useState('');
     const [cargando, setCargando] = useState(false);
+    
+    // 👇 ESTADO PARA CONTROLAR EL ARAÑAZO
+    const [mostrarTransicion, setMostrarTransicion] = useState(false);
 
     useEffect(() => {
+        // Al montar el componente, un pequeño retraso asegura que la bolita de carga termine primero
+        const timer = setTimeout(() => {
+             setMostrarTransicion(true);
+        }, 100); 
+
         const cargarDatosMaestros = async () => {
             try {
-                // 1. Cargar Familias (Categorías)
                 const resFamilias = await api.get('/maestros/categorias');
                 const familiasActivas = resFamilias.data.filter(f => 
                     f.activo === true || f.Activo === true || String(f.activo) === 'true'
                 );
                 
                 setFamilias(familiasActivas);
-                // Lógica original: Buscar "Comestibles" por defecto, sino la primera
                 if (familiasActivas.length > 0) {
                     const catComestibles = familiasActivas.find(c => {
                         const nombreCat = (c.nombre || c.Nombre || '').toUpperCase();
@@ -61,15 +68,12 @@ const VentaYape = () => {
                     }
                 }
 
-                // 2. Cargar Bancos (Billeteras)
                 const resBancos = await api.get('/maestros/entidades');
                 const entidades = resBancos.data;
                 
-                // Lógica original: Filtrar Billeteras o que el nombre contenga BCP/BBVA
                 const billeteras = entidades.filter(b => {
                     const tipo = String(b.tipo || b.Tipo || '').toUpperCase(); 
                     const nombre = String(b.nombre || b.Nombre || '').toUpperCase();
-                    // También verificamos que esté activo (true)
                     const estaActivo = b.activo !== false && b.Activo !== false;
 
                     return estaActivo && (tipo.includes('BILLETERA') || nombre.includes('BCP') || nombre.includes('BBVA'));
@@ -88,12 +92,13 @@ const VentaYape = () => {
         };
 
         cargarDatosMaestros();
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleRegistrarVenta = async (e) => {
         e.preventDefault();
         
-        // Notificaciones flotantes de validación
         if (!cajaAbierta) {
             return Toast.fire({ icon: 'error', title: 'Caja Cerrada', text: 'Abre turno primero para vender' });
         }
@@ -124,7 +129,6 @@ const VentaYape = () => {
         try {
             const res = await api.post('/ventas/registrar', payload);
             
-            // ✅ Notificación flotante de éxito
             Toast.fire({
                 icon: 'success',
                 title: '¡Venta Exitosa!',
@@ -137,7 +141,6 @@ const VentaYape = () => {
         } catch (error) {
             const msg = error.response?.data?.mensaje || error.response?.data?.error || 'No se pudo registrar la venta';
             
-            // ❌ Notificación flotante de error (ej. Duplicidad)
             Toast.fire({
                 icon: 'error',
                 title: 'Error',
@@ -148,7 +151,6 @@ const VentaYape = () => {
         }
     };
     
-    // Función auxiliar para determinar el color del puntito del banco (Como en tu ventas.js)
     const obtenerClaseDot = (nombreBanco) => {
         const nom = String(nombreBanco).toUpperCase();
         if (nom.includes('BCP')) return 'bcp';
@@ -160,10 +162,28 @@ const VentaYape = () => {
 
     return (
         <section className="vista-seccion activa" style={{ opacity: cajaAbierta ? 1 : 0.5, pointerEvents: cajaAbierta ? 'all' : 'none' }}>
-            <div className="contenedor-ventas-pro">
+            
+            {/* 🚀 EL PORTAL: Saca la animación de la caja fuerte y la tira encima de toda la web */}
+            {mostrarTransicion && createPortal(
+                <div className="efecto-transicion-arañazo">
+                    <div className="garra-corte garra-1"></div>
+                    <div className="garra-corte garra-2"></div>
+                    <div className="garra-corte garra-3"></div>
+                </div>,
+                document.body // Esto le dice que lo ponga al nivel máximo de la página
+            )}
+
+            {/* 🚀 CRÍTICO: El position relative va aquí en el contenedor principal */}
+            <div className="contenedor-ventas-pro" style={{ position: 'relative' }}>
                 
+                {/* 👇 CONTENEDOR DEL GATITO (Posicionado libremente sin ser recortado) */}
+                <div className="gatito-container">
+                     <img src={gatitoGif} alt="Gatito caminando" className="gatito-animado" />
+                </div>
+
                 {/* --- PANEL IZQUIERDO: CATEGORÍAS (FAMILIAS) --- */}
                 <div className="panel-categorias-pro">
+                    
                     <div className="cabecera-simple">
                         <h3><i className="fa-solid fa-bag-shopping"></i> ¿Qué vendiste?</h3>
                     </div>
@@ -178,7 +198,6 @@ const VentaYape = () => {
                                 const icono = MAPA_ICONOS_VENTAS[nombre] || '📦';
                                 const estaSeleccionada = familiaSeleccionada === id;
 
-                                // Aplicamos exactamente tu clase .card-familia
                                 return (
                                     <button 
                                         key={id} 
@@ -223,7 +242,6 @@ const VentaYape = () => {
                         <div className="col-detalles">
                             <label className="label-separador">Billetera de Destino:</label>
                             
-                            {/* Aquí aplicamos la lógica de tus botones de banco (chips) */}
                             <div className="selector-bancos wrap-grid">
                                 {bancos.length === 0 ? (
                                     <p style={{ fontSize: '0.8rem' }}>Cargando entidades...</p>
@@ -255,7 +273,6 @@ const VentaYape = () => {
                                     placeholder="Ej: 12345678" 
                                     maxLength="15" 
                                     value={numOperacion} 
-                                    // Esto reemplaza tu configurarInputAlfanumerico (solo letras y números)
                                     onChange={e => setNumOperacion(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))} 
                                     required 
                                 />

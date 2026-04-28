@@ -329,6 +329,41 @@ body[data-theme="dark"] .segmento.seleccionado {
 .vista-seccion.activa .chip-banco:nth-child(5) { animation-delay: 0.60s; }
 .vista-seccion.activa .chip-banco:nth-child(n+6) { animation-delay: 0.65s; }
 
+.gatito-container {
+    position: absolute;
+    top: -35px;
+    left: 20px;  
+    width: 90px; 
+    z-index: 9999;
+    pointer-events: none; 
+}
+
+.gatito-animado {
+    width: 100%;
+    height: auto;
+    animation: caminarGatito 60s linear infinite; 
+    mix-blend-mode: multiply; 
+    filter: contrast(1.2) !important; 
+}
+
+@keyframes caminarGatito {
+    0% {
+        transform: translateX(-40px) scaleX(1); 
+    }
+    49.9% {
+        transform: translateX(72vw) scaleX(1); 
+    }
+    50% {
+        transform: translateX(72vw) scaleX(-1); 
+    }
+    99.9% {
+        transform: translateX(-70px) scaleX(-1);
+    }
+    100% {
+        transform: translateX(-70px) scaleX(1); 
+    }
+}
+
 @keyframes fadeSlideUpVentas {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -337,4 +372,65 @@ body[data-theme="dark"] .segmento.seleccionado {
 @keyframes popInBancos {
     0% { opacity: 0; transform: scale(0.5); }
     100% { opacity: 1; transform: scale(1); }
+}
+
+.efecto-transicion-arañazo {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background-color: #09090b;
+    z-index: 99999999; /* Z-index máximo absoluto */
+    pointer-events: none; 
+    display: flex;
+    justify-content: center;
+    overflow: hidden; /* 🔥 ESTO EVITA LAS BARRAS DE SCROLL 🔥 */
+    animation: desvanecerPantalla 0.6s 0.8s forwards ease-in-out; 
+}
+
+.garra-corte {
+    position: absolute;
+    width: 35px; 
+    background: #ffffff; 
+    
+    box-shadow: 
+        0 0 20px #E60023, 
+        0 0 40px #E60023, 
+        0 0 80px #E60023, 
+        inset 0 0 10px #ff4d4d; 
+        
+    border-radius: 50% / 5% 5% 95% 95%; 
+    
+    transform: rotate(30deg); 
+    opacity: 0;
+}
+
+.garra-1 { left: 25vw; top: -15vh; animation: zarpazo 0.45s 0.1s cubic-bezier(0.1, 0.8, 0.1, 1) forwards; }
+.garra-2 { left: 45vw; top: -15vh; animation: zarpazo 0.45s 0.18s cubic-bezier(0.1, 0.8, 0.1, 1) forwards; }
+.garra-3 { left: 65vw; top: -15vh; animation: zarpazo 0.45s 0.26s cubic-bezier(0.1, 0.8, 0.1, 1) forwards; }
+
+@keyframes zarpazo {
+    0% { 
+        height: 0; 
+        opacity: 1; 
+        transform: rotate(30deg) translateY(0) scaleY(1); 
+    }
+    40% { 
+        height: 140vh; 
+        opacity: 1; 
+        transform: rotate(30deg) translateY(0) scaleY(1); 
+    }
+    100% { 
+        height: 140vh; 
+        opacity: 0; 
+        transform: rotate(30deg) translateY(30vh) scaleY(0.5); 
+    }
+}
+
+@keyframes desvanecerPantalla {
+    to { 
+        opacity: 0; 
+        visibility: hidden; 
+    }
 }

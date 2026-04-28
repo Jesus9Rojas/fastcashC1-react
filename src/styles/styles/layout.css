@@ -96,8 +96,8 @@
     margin-bottom: 1rem;
 }
 .logo-sistema { 
-    height: 9rem;
-    margin: -3.5rem 0;
+    height: 3rem;
+    margin: 0.2rem 0 ;
     filter: brightness(0) invert(1); 
     margin-bottom: 1rem; 
     transition: transform 0.3s ease; 
@@ -105,7 +105,7 @@
 
 .logo-contenedor{
     justify-content: center;
-    height: 4rem;
+    height: 5rem;
 }
 .logo-sistema:hover { transform: scale(1.05); }
 

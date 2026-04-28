@@ -24,19 +24,18 @@ const UsuariosTurnos = lazy(() => import('./pages/UsuariosTurnos'));
 const DashboardGraficos = lazy(() => import('./pages/DashboardGraficos'));
 const CierreCaja = lazy(() => import('./pages/CierreCaja'));
 
-// Componente de carga rápida entre transiciones de pantalla
 const LoadingFallback = () => (
     <div style={{ 
-        position: 'fixed',    // <--- Lo fijamos a la pantalla
+        position: 'fixed',   
         top: 0, 
         left: 0,
-        width: '100vw',       // <--- 100% del ancho de la pantalla
-        height: '100vh',      // <--- 100% del alto de la pantalla
+        width: '100vw',       
+        height: '100vh',     
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
-        backgroundColor: '#09090b', // <--- Fondo oscuro para que combine con el diseño moderno
-        zIndex: 9999          // <--- Nos aseguramos que esté por encima de todo
+        backgroundColor: '#09090b',
+        zIndex: 9999         
     }}>
         <i className="fa-solid fa-circle-notch fa-spin fa-3x" style={{ color: 'var(--color-primario)' }}></i>
     </div>
@@ -47,7 +46,6 @@ function App() {
 
   return (
     <HashRouter>
-      {/* 👇 2. Envolvemos las rutas en Suspense */}
       <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/login" element={!usuario ? <Login /> : <Navigate to="/" />} />

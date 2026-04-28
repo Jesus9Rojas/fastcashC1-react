@@ -1,21 +1,22 @@
 import { useState, useEffect, useContext } from 'react';
+import { createPortal } from 'react-dom'; // 🚀 IMPORTANTE: Añadimos esto
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import gatitoGif from '../assets/img/img/Caminando.gif'; 
 
 const Toast = Swal.mixin({
     toast: true,
-    position: 'top-end', // Aparece arriba a la derecha
+    position: 'top-end', 
     showConfirmButton: false,
-    timer: 3000, // Desaparece en 3 segundos
+    timer: 3000,
     timerProgressBar: true,
     didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer; // Pausa si le pones el mouse encima
+        toast.onmouseenter = Swal.stopTimer; 
         toast.onmouseleave = Swal.resumeTimer;
     }
 });
 
-// 1. REPLICAMOS TU MAPA DE ICONOS ORIGINAL
 const MAPA_ICONOS_VENTAS = {
     'Comestibles': '🛒', 'Bebidas': '🥤', 'Licores': '🍷',
     'Limpieza': '🧹', 'Cuidado Personal': '🧴', 'Frescos': '🥦',
@@ -36,11 +37,16 @@ const VentaTarjeta = () => {
     const [comprobante, setComprobante] = useState('2'); 
     const [numOperacion, setNumOperacion] = useState('');
     const [cargando, setCargando] = useState(false);
+    
+    const [mostrarTransicion, setMostrarTransicion] = useState(false);
 
     useEffect(() => {
+        const timer = setTimeout(() => {
+             setMostrarTransicion(true);
+        }, 100); 
+        
         const cargarDatosMaestros = async () => {
             try {
-                // 1. Cargar Familias (Categorías)
                 const resFamilias = await api.get('/maestros/categorias');
                 const familiasActivas = resFamilias.data.filter(f => 
                     f.activo === true || f.Activo === true || String(f.activo) === 'true'
@@ -61,7 +67,6 @@ const VentaTarjeta = () => {
                     }
                 }
 
-                // 2. Cargar Bancos (SOLO BANCOS para el POS de tarjetas)
                 const resBancos = await api.get('/maestros/entidades');
                 const entidades = resBancos.data;
                 
@@ -84,12 +89,13 @@ const VentaTarjeta = () => {
         };
 
         cargarDatosMaestros();
+        
+        return () => clearTimeout(timer);
     }, []);
 
     const handleRegistrarVenta = async (e) => {
         e.preventDefault();
         
-        // Notificaciones flotantes de validación
         if (!cajaAbierta) {
             return Toast.fire({ icon: 'error', title: 'Caja Cerrada', text: 'Abre turno primero para vender' });
         }
@@ -120,7 +126,6 @@ const VentaTarjeta = () => {
         try {
             const res = await api.post('/ventas/registrar', payload);
             
-            // ✅ Notificación flotante de éxito
             Toast.fire({
                 icon: 'success',
                 title: '¡Venta Exitosa!',
@@ -133,7 +138,6 @@ const VentaTarjeta = () => {
         } catch (error) {
             const msg = error.response?.data?.mensaje || error.response?.data?.error || 'No se pudo registrar la venta';
             
-            // ❌ Notificación flotante de error (ej. Duplicidad)
             Toast.fire({
                 icon: 'error',
                 title: 'Error',
@@ -144,7 +148,6 @@ const VentaTarjeta = () => {
         }
     };
 
-    // Función auxiliar para determinar el color del puntito del banco
     const obtenerClaseDot = (nombreBanco) => {
         const nom = String(nombreBanco).toUpperCase();
         if (nom.includes('INTERBANK')) return 'interbank';
@@ -156,9 +159,22 @@ const VentaTarjeta = () => {
 
     return (
         <section className="vista-seccion activa" style={{ opacity: cajaAbierta ? 1 : 0.5, pointerEvents: cajaAbierta ? 'all' : 'none' }}>
-            <div className="contenedor-ventas-pro">
+            
+            {mostrarTransicion && createPortal(
+                <div className="efecto-transicion-arañazo">
+                    <div className="garra-corte garra-1"></div>
+                    <div className="garra-corte garra-2"></div>
+                    <div className="garra-corte garra-3"></div>
+                </div>,
+                document.body // Esto le dice que lo ponga al nivel máximo de la página
+            )}
+
+            <div className="contenedor-ventas-pro" style={{ position: 'relative' }}>
                 
-                {/* --- PANEL IZQUIERDO: CATEGORÍAS (FAMILIAS) --- */}
+                <div className="gatito-container">
+                     <img src={gatitoGif} alt="Gatito caminando" className="gatito-animado" />
+                </div>
+
                 <div className="panel-categorias-pro">
                     <div className="cabecera-simple">
                         <h3><i className="fa-regular fa-credit-card"></i> Venta con Tarjeta</h3>
@@ -190,7 +206,6 @@ const VentaTarjeta = () => {
                     </div>
                 </div>
 
-                {/* --- PANEL DERECHO: TRANSACCIÓN --- */}
                 <div className="panel-transaccion-pro">
                     <form onSubmit={handleRegistrarVenta} className="form-grid-pro">
                         
@@ -220,7 +235,6 @@ const VentaTarjeta = () => {
                         <div className="col-detalles">
                             <label className="label-separador">Banco del POS:</label>
                             
-                            {/* Chips de los bancos */}
                             <div className="selector-bancos wrap-grid">
                                 {bancos.length === 0 ? (
                                     <p style={{ fontSize: '0.8rem' }}>Cargando bancos...</p>
