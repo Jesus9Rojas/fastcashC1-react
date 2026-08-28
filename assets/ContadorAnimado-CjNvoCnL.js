@@ -1,1 +1,0 @@
-import{d as e,s as t,y as n}from"./index-DcOtlrkL.js";var r=n(e(),1),i=t(),a=({valorFinal:e,duracion:t=1e3})=>{let[n,a]=(0,r.useState)(0);return(0,r.useEffect)(()=>{let n=null,r=i=>{n||=i;let o=Math.min((i-n)/t,1),s=1-(1-o)**4;a(e*s),o<1?window.requestAnimationFrame(r):a(e)};window.requestAnimationFrame(r)},[e,t]),(0,i.jsx)(`span`,{children:n.toFixed(2)})};export{a as t};
