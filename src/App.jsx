@@ -5,14 +5,10 @@ import { AuthContext } from './context/AuthContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 
+// 👇 Solo dejamos base.css donde inyectamos Tailwind y tus variables
 import './styles/styles/base.css';
-import './styles/styles/layout.css';
-import './styles/styles/ventas.css';
-import './styles/styles/admin-reportes.css';
-import './styles/styles/media-queries.css';
-import './styles/styles/tablas-modales.css';
 
-// 👇 1. IMPORTACIONES PEREZOSAS (Lazy Loading) para máxima velocidad
+// IMPORTACIONES PEREZOSAS (Lazy Loading) para máxima velocidad
 const Bienvenida = lazy(() => import('./pages/Bienvenido'));
 const VentaYape = lazy(() => import('./pages/VentaYape'));
 const VentaTarjeta = lazy(() => import('./pages/VentaTarjeta'));
@@ -24,20 +20,10 @@ const UsuariosTurnos = lazy(() => import('./pages/UsuariosTurnos'));
 const DashboardGraficos = lazy(() => import('./pages/DashboardGraficos'));
 const CierreCaja = lazy(() => import('./pages/CierreCaja'));
 
+// LoadingFallback 100% Tailwind
 const LoadingFallback = () => (
-    <div style={{ 
-        position: 'fixed',   
-        top: 0, 
-        left: 0,
-        width: '100vw',       
-        height: '100vh',     
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        backgroundColor: '#09090b',
-        zIndex: 9999         
-    }}>
-        <i className="fa-solid fa-circle-notch fa-spin fa-3x" style={{ color: 'var(--color-primario)' }}></i>
+    <div className="fixed inset-0 flex items-center justify-center bg-[#09090b] z-[9999]">
+        <i className="fa-solid fa-circle-notch fa-spin text-5xl text-[var(--color-primario)]"></i>
     </div>
 );
 

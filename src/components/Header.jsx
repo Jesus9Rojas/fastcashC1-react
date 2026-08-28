@@ -1,46 +1,44 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import Swal from 'sweetalert2';
 
-// 1. ÚNICA DECLARACIÓN DE ICONOS MODERNOS (Reemplaza a los emojis)
-const iconosTema = {
-    'light': <i className="fa-solid fa-sun" style={{ color: '#f59e0b' }}></i>,
-    'dark': <i className="fa-solid fa-moon" style={{ color: '#cbd5e1' }}></i>,
-    'pink': <i className="fa-solid fa-spa" style={{ color: '#ec4899' }}></i>,
-    'red': <i className="fa-solid fa-fire" style={{ color: '#ef4444' }}></i>
-};
+const TEMAS = [
+    { id: 'light', nombre: 'Claro', dot: 'bg-gray-100 border-gray-300', icono: <i className="fa-solid fa-sun text-amber-500"></i> },
+    { id: 'dark', nombre: 'Oscuro', dot: 'bg-gray-900 border-gray-600', icono: <i className="fa-solid fa-moon text-blue-400"></i> },
+    { id: 'pink', nombre: 'Pink', dot: 'bg-pink-500 border-pink-300', icono: <i className="fa-solid fa-spa text-pink-500"></i> },
+    { id: 'red', nombre: 'Rojo', dot: 'bg-red-500 border-red-300', icono: <i className="fa-solid fa-fire text-red-500"></i> },
+];
 
 const Header = ({ toggleSidebar, isMobileOpen }) => {
     const { usuario, logout, cajaAbierta, setCajaAbierta } = useContext(AuthContext);
     const navigate = useNavigate();
-    
+
     const [menuTemaActivo, setMenuTemaActivo] = useState(false);
     const [abriendo, setAbriendo] = useState(false);
-    
-    // Estados nuevos para Reloj y Tema
+    const [fechaActual, setFechaActual] = useState('');
     const [horaActual, setHoraActual] = useState('');
     const [temaActual, setTemaActual] = useState(localStorage.getItem('temaFastCash') || 'light');
+    const temaRef = useRef(null);
 
-    // RELOJ EN TIEMPO REAL
     useEffect(() => {
         const actualizarReloj = () => {
             const ahora = new Date();
-            const texto = ahora.toLocaleString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-            setHoraActual(texto);
+            const fecha = ahora.toLocaleDateString('es-PE', { weekday: 'short', day: '2-digit', month: 'short' });
+            const hora = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true });
+            setFechaActual(fecha.charAt(0).toUpperCase() + fecha.slice(1));
+            setHoraActual(hora);
         };
         actualizarReloj();
         const intervalo = setInterval(actualizarReloj, 1000);
         return () => clearInterval(intervalo);
     }, []);
 
-    // APLICAR TEMA AL CARGAR LA PÁGINA
     useEffect(() => {
         document.body.setAttribute('data-theme', temaActual);
     }, [temaActual]);
 
-    // Verificar Caja
     useEffect(() => {
         const verificarCaja = async () => {
             try {
@@ -56,83 +54,173 @@ const Header = ({ toggleSidebar, isMobileOpen }) => {
         if (usuario) verificarCaja();
     }, [usuario, setCajaAbierta]);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (temaRef.current && !temaRef.current.contains(event.target)) {
+                setMenuTemaActivo(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     const handleAbrirCaja = async () => {
         setAbriendo(true);
         try {
             const uid = usuario?.usuarioID || usuario?.UsuarioID;
-            await api.post('/caja/abrir', { 
-                usuarioID: parseInt(uid), 
-                usuarioId: parseInt(uid), 
-                saldoInicial: 0.00 
+            await api.post('/caja/abrir', {
+                usuarioID: parseInt(uid),
+                usuarioId: parseInt(uid),
+                saldoInicial: 0.00
             });
-            
+
             setCajaAbierta(true);
-            
-            Swal.fire({ 
-                title: '¡Turno Iniciado!', 
-                text: 'Caja Abierta Correctamente.', 
-                icon: 'success', 
-                timer: 2000, 
-                showConfirmButton: false 
+
+            Swal.fire({
+                html: `
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="w-20 h-20 bg-emerald-50 dark:bg-emerald-500/10 rounded-[1.5rem] flex items-center justify-center text-emerald-500 dark:text-emerald-400 mb-5 shadow-[0_10px_20px_-5px_rgba(16,185,129,0.3)]">
+                            <i class="fa-solid fa-box-open text-4xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-[var(--texto-principal)] tracking-tight mb-2">¡Turno Iniciado!</h2>
+                        <p class="text-[var(--texto-secundario)] font-medium text-sm text-center px-2">
+                            Caja abierta correctamente. Puedes comenzar a registrar ventas.
+                        </p>
+                    </div>
+                `,
+                timer: 2000,
+                showConfirmButton: false,
+                customClass: { popup: 'rounded-[2.5rem] p-6 border border-[var(--border-color)] bg-[var(--color-header)] shadow-2xl max-w-sm w-full' }
             });
-            
+
         } catch (error) {
             const msg = error.response?.data?.mensaje || error.response?.data?.error || "Error al abrir caja";
-            Swal.fire('Error', msg, 'error');
+            Swal.fire({
+                html: `
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="w-20 h-20 bg-red-50 dark:bg-red-500/10 rounded-[1.5rem] flex items-center justify-center text-red-500 dark:text-red-400 mb-5 shadow-[0_10px_20px_-5px_rgba(239,68,68,0.3)]">
+                            <i class="fa-solid fa-triangle-exclamation text-4xl animate-pulse"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-[var(--texto-principal)] tracking-tight mb-2">Error</h2>
+                        <p class="text-[var(--texto-secundario)] font-medium text-sm text-center px-2">
+                            ${msg}
+                        </p>
+                    </div>
+                `,
+                confirmButtonText: 'Aceptar',
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'rounded-[2.5rem] p-6 border border-[var(--border-color)] bg-[var(--color-header)] shadow-2xl max-w-sm w-full',
+                    actions: 'flex w-full mt-6 px-2 pb-2',
+                    confirmButton: 'w-full bg-red-600 hover:bg-red-700 text-white rounded-2xl py-3.5 font-bold shadow-md hover:shadow-lg transition-all text-sm outline-none m-0'
+                }
+            });
         } finally {
             setAbriendo(false);
         }
     };
 
-    // 2. FUNCIÓN PARA CAMBIAR Y GUARDAR EL TEMA (Faltaba en tu código)
     const cambiarTema = (nuevoTema) => {
         setTemaActual(nuevoTema);
-        localStorage.setItem('temaFastCash', nuevoTema); // Guarda la preferencia del usuario
-        setMenuTemaActivo(false); // Cierra el menú al hacer clic
+        localStorage.setItem('temaFastCash', nuevoTema);
+        setMenuTemaActivo(false);
     };
 
+    const temaSeleccionado = TEMAS.find(t => t.id === temaActual);
+
     return (
-        <header className="header-sistema">
-            <div className="header-izquierda">
-                <button 
-                    className={`btn-hamburguesa ${isMobileOpen ? 'activo' : ''}`} 
+        <header className="h-[75px] bg-[var(--color-header)] flex justify-between items-center px-4 md:px-8 border-b border-[var(--border-color)] z-40 shrink-0 transition-colors duration-300">
+
+            <div className="flex items-center gap-2 sm:gap-4">
+                <button
+                    className="w-11 h-11 flex flex-col justify-center items-center gap-1.5 rounded-full text-[var(--texto-secundario)] hover:bg-[var(--color-fondo-app)] hover:text-[var(--color-primario)] transition-all duration-300 focus:outline-none"
                     onClick={toggleSidebar}
+                    aria-label="Alternar menú"
                 >
-                    <span className="linea linea-1"></span>
-                    <span className="linea linea-2"></span>
-                    <span className="linea linea-3"></span>
+                    <span className={`block w-5 h-[2px] bg-current rounded-full transition-transform duration-300 ${isMobileOpen ? 'translate-y-[8px] rotate-45' : ''}`}></span>
+                    <span className={`block w-4 h-[2px] bg-current rounded-full transition-opacity duration-300 self-start ml-3 ${isMobileOpen ? 'opacity-0' : ''}`}></span>
+                    <span className={`block w-5 h-[2px] bg-current rounded-full transition-transform duration-300 ${isMobileOpen ? '-translate-y-[8px] -rotate-45' : ''}`}></span>
                 </button>
-                
-                {/* SELECTOR DE TEMAS */}
-                <div className="selector-tema-wrapper" style={{ position: 'relative' }}>
-                    <button className="btn-tema" onClick={() => setMenuTemaActivo(!menuTemaActivo)} title="Cambiar Tema">
-                        <span id="iconoTemaActual">{iconosTema[temaActual] || <i className="fa-solid fa-palette"></i>}</span>
+
+                <div className="hidden sm:block w-px h-6 bg-[var(--border-color)] mx-1"></div>
+
+                <div className="relative" ref={temaRef}>
+                    <button
+                        className={`w-11 h-11 flex justify-center items-center rounded-full text-lg transition-all focus:outline-none ${menuTemaActivo ? 'bg-[var(--color-fondo-app)] text-[var(--color-primario)] shadow-inner' : 'text-[var(--texto-secundario)] hover:bg-[var(--color-fondo-app)] hover:text-[var(--texto-principal)]'}`}
+                        onClick={() => setMenuTemaActivo(!menuTemaActivo)}
+                        title="Cambiar Tema"
+                    >
+                        {temaSeleccionado?.icono || <i className="fa-solid fa-palette text-gray-600"></i>}
                     </button>
+
                     {menuTemaActivo && (
-                        <div className="menu-temas mostrar" style={{ display: 'block' }}>
-                            <button className="opcion-tema" onClick={() => cambiarTema('light')}><span className="color-dot light"></span> Modo Claro</button>
-                            <button className="opcion-tema" onClick={() => cambiarTema('dark')}><span className="color-dot dark"></span> Modo Oscuro</button>
-                            <button className="opcion-tema" onClick={() => cambiarTema('pink')}><span className="color-dot pink"></span> Modo Pink</button>
-                            <button className="opcion-tema" onClick={() => cambiarTema('red')}><span className="color-dot red"></span> Modo Rojo</button>
+                        <div className="absolute top-14 left-0 bg-[var(--color-header)] border border-[var(--border-color)] rounded-[1.5rem] p-2 w-48 shadow-[0_20px_45px_-10px_rgba(0,0,0,0.15)] flex flex-col gap-1 z-[1000] origin-top-left animate-[fade-slide-down_0.2s_ease-out_forwards]">
+                            <span className="px-3 pt-2 pb-1 text-[10px] font-black text-[var(--texto-secundario)] uppercase tracking-widest">Apariencia</span>
+                            {TEMAS.map(tema => (
+                                <button
+                                    key={tema.id}
+                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm font-bold transition-all ${
+                                        temaActual === tema.id
+                                            ? 'bg-[var(--color-fondo-app)] text-[var(--color-primario)] shadow-sm'
+                                            : 'text-[var(--texto-secundario)] hover:bg-[var(--color-fondo-app)] hover:text-[var(--texto-principal)]'
+                                    }`}
+                                    onClick={() => cambiarTema(tema.id)}
+                                >
+                                    <div className="w-6 flex justify-center text-lg shrink-0">
+                                        {tema.icono}
+                                    </div>
+                                    <span className="flex-1 text-[var(--texto-principal)]">{tema.nombre}</span>
+                                    {temaActual === tema.id && <i className="fa-solid fa-circle-check text-[var(--color-primario)] text-xs"></i>}
+                                </button>
+                            ))}
                         </div>
                     )}
                 </div>
             </div>
 
-            <div className="header-derecha">
-                <div className="turno-info">
-                    <span className="turno-actual fecha-hora-reloj">{horaActual}</span>
+            <div className="flex items-center gap-3 sm:gap-5">
+
+                <div className="hidden md:flex items-center gap-3 bg-[var(--color-fondo-app)] border border-[var(--border-color)] rounded-2xl px-4 py-2 transition-colors duration-300">
+                    <div className="flex items-center gap-2 text-[var(--texto-secundario)]">
+                        <i className="fa-regular fa-calendar text-xs"></i>
+                        <span className="text-[11px] font-bold uppercase tracking-widest">{fechaActual}</span>
+                    </div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-[var(--border-color)]"></div>
+                    <div className="flex items-center gap-2">
+                        <i className="fa-regular fa-clock text-xs text-[var(--color-primario)]"></i>
+                        <span className="text-sm font-black text-[var(--texto-principal)] font-mono tabular-nums tracking-tight">{horaActual}</span>
+                    </div>
                 </div>
-                
-                {!cajaAbierta && (
-                    <button className="btn-abrir-caja" onClick={handleAbrirCaja} disabled={abriendo}>
-                        <span className="icono-btn"><i className="fa-solid fa-box-open"></i></span> 
-                        {abriendo ? 'Abriendo...' : 'Abrir Caja'}
+
+                {!cajaAbierta ? (
+                    <button
+                        className="group flex items-center gap-3 pr-4 sm:pr-5 py-2 pl-2 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:shadow-none outline-none"
+                        onClick={handleAbrirCaja}
+                        disabled={abriendo}
+                    >
+                        <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                            <i className={`fa-solid ${abriendo ? 'fa-spinner fa-spin' : 'fa-box-open'} text-sm`}></i>
+                        </span>
+                        <span className="hidden sm:inline">{abriendo ? 'Abriendo...' : 'Abrir Caja'}</span>
                     </button>
+                ) : (
+                    <div className="flex items-center gap-2.5 pr-4 sm:pr-5 py-2 pl-2 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
+                        <span className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+                            <i className="fa-solid fa-check text-white text-xs"></i>
+                        </span>
+                        <span className="hidden sm:inline text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm tracking-wide">Caja Abierta</span>
+                    </div>
                 )}
 
-                <button className="btn-cerrar-sesion" onClick={() => { logout(); navigate('/login'); }}>
-                    <span className="icono-btn"><i className="fa-solid fa-arrow-right-from-bracket"></i></span> Salir
+                <div className="w-px h-6 bg-[var(--border-color)]"></div>
+
+                <button
+                    className="group w-11 h-11 sm:w-auto sm:px-4 sm:py-2.5 rounded-full sm:rounded-2xl bg-red-50 dark:bg-red-500/10 hover:bg-red-500 text-red-600 dark:text-red-400 hover:text-white border border-red-100 dark:border-red-500/20 hover:border-red-500 transition-all flex items-center justify-center gap-2 outline-none"
+                    onClick={() => { logout(); navigate('/login'); }}
+                    title="Cerrar Sesión"
+                >
+                    <i className="fa-solid fa-arrow-right-from-bracket text-sm transition-transform group-hover:translate-x-0.5"></i>
+                    <span className="hidden sm:inline font-bold text-sm tracking-wide">Salir</span>
                 </button>
             </div>
         </header>

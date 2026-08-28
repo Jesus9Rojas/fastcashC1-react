@@ -22,219 +22,140 @@ const Bienvenida = () => {
         const timer = setTimeout(() => {
             setCargando(false);
         }, 1200);
-        
         return () => clearTimeout(timer);
     }, []);
 
     if (cargando) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexDirection: 'column' }}>
+            <div className="flex flex-col items-center justify-center h-full animate-fade-in">
                 <img 
                     src={logoAnimado} 
                     alt="Cargando..." 
-                    style={{ 
-                        width: '180px', 
-                        animation: 'pulseLogo 1.5s infinite ease-in-out',
-                        filter: 'drop-shadow(0 0 15px rgba(230,0,35,0.4))'
-                    }} 
+                    className="w-44 animate-pulse drop-shadow-[0_0_15px_rgba(230,0,35,0.4)]"
                 />
-                <p style={{ marginTop: '20px', color: 'var(--texto-secundario)', fontWeight: '600', letterSpacing: '1px' }}>
+                <p className="mt-5 text-[var(--texto-secundario)] font-semibold tracking-wide">
                     Preparando tu área de trabajo...
                 </p>
-                <style>
-                    {`
-                        @keyframes pulseLogo {
-                            0% { transform: scale(0.95); opacity: 0.8; }
-                            50% { transform: scale(1.05); opacity: 1; }
-                            100% { transform: scale(0.95); opacity: 0.8; }
-                        }
-                    `}
-                </style>
             </div>
         );
     }
 
-    // Obtenemos el primer nombre del usuario para la burbuja
     const primerNombre = usuario?.nombreCompleto?.split(' ')[0] || 'Humano';
 
     return (
-        <div style={{ animation: 'fadeIn 0.6s ease-out' }}>
+        <div className="animate-fade-in pb-12 px-2 max-w-7xl mx-auto font-sans transition-colors duration-300">
             
-            {/* 👇 Cambiamos los estilos en línea por la clase 'card-bienvenida' para controlar el responsivo 👇 */}
-            <div className="card-bienvenida">
-                <div className="texto-bienvenida">
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', fontWeight: '800' }}>
-                        {saludo}, {primerNombre} 👋
+            <div className="flex flex-col-reverse md:flex-row items-center md:items-end justify-between mt-8 mb-20 gap-10 md:gap-0">
+                
+                <div className="text-center md:text-left z-10 w-full md:w-auto">
+                    <h1 className="text-5xl sm:text-6xl lg:text-[5rem] font-black text-[var(--texto-principal)] tracking-tighter mb-2 leading-tight transition-colors duration-300">
+                        {saludo}, <br className="hidden md:block" />
+                        <span className="text-[var(--color-primario)]">{primerNombre}</span>
                     </h1>
-                    <p style={{ fontSize: '1.1rem', opacity: '0.9' }}>
+                    <p className="text-[var(--texto-secundario)] font-semibold text-lg lg:text-xl max-w-lg mx-auto md:mx-0 mt-4 transition-colors duration-300">
                         ¿Qué deseas hacer en este turno? Selecciona una acción rápida para comenzar.
                     </p>
                 </div>
 
-                <div className="contenedor-gatito">
-                    <div className="burbuja-gato">
-                        ¡Miau! Bienvenido, <br/> <span style={{color: 'var(--color-primario)'}}>{primerNombre}</span> 🐾
+                <div className="relative w-56 h-56 md:w-72 md:h-72 flex-shrink-0 z-10 mt-12 md:mt-0 md:mr-10">
+                    
+                    <div className="absolute top-[10%] md:top-[5%] right-[75%] md:right-[75%] animate-float z-20 w-max pointer-events-none">
+                        <div className="bg-[var(--color-header)] border border-[var(--border-color)] shadow-[0_15px_35px_rgba(0,0,0,0.1)] rounded-2xl px-6 py-4 text-[0.95rem] font-extrabold text-[var(--texto-principal)] relative transition-colors duration-300">
+                            ¡Miau! Bienvenido,<br/>
+                            <span className="text-[var(--color-primario)]">{primerNombre}</span> 🐾
+                            
+                            <div className="absolute top-1/2 -right-3 transform -translate-y-1/2 w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px] border-l-[var(--border-color)]">
+                            </div>
+                        </div>
                     </div>
-                    <img src={Gatito} alt="Gatito Tolon" style={{width: '100%', height: '100%', borderRadius: '15px', objectFit: 'contain'}} />
+                    
+                    <img 
+                        src={Gatito} 
+                        alt="Asistente Tolon" 
+                        className="w-full h-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.25)] relative z-10 transform scale-110 md:scale-125 origin-bottom" 
+                    />
                 </div>
             </div>
 
-            <h3 style={{ marginBottom: '1.2rem', color: 'var(--texto-principal)', fontWeight: '800' }}>
-                Accesos Rápidos
-            </h3>
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-1.5 h-7 bg-[var(--color-primario)] rounded-full shadow-sm"></div>
+                <h3 className="text-2xl font-black text-[var(--texto-principal)] tracking-tight m-0 transition-colors duration-300">
+                    Centro de Mando
+                </h3>
+            </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
-                <div className="card-accion" onClick={() => navigate('/yape')} style={{ background: 'var(--color-header)', padding: '1.5rem', borderRadius: '16px', boxShadow: 'var(--sombra-md)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', border: '1px solid var(--border-color)' }} onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--sombra-lg)' }} onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--sombra-md)' }}>
-                    <div style={{ background: '#f3e8ff', width: '55px', height: '55px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9333ea', fontSize: '1.5rem', marginBottom: '1rem' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div 
+                    onClick={() => navigate('/yape')} 
+                    className="group relative bg-[var(--color-header)] p-8 rounded-[2rem] shadow-sm border border-[var(--border-color)] hover:border-purple-300 hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)] transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between min-h-[220px] z-10 hover:-translate-y-1.5"
+                >
+                    <div className="flex justify-between items-start w-full">
+                        <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-600 text-3xl transition-all duration-300 group-hover:bg-purple-600 group-hover:text-white shadow-inner">
+                            <i className="fa-solid fa-qrcode"></i>
+                        </div>
+                        <div className="w-10 h-10 rounded-full border border-[var(--border-color)] flex items-center justify-center text-[var(--texto-secundario)] transition-all duration-300 group-hover:border-purple-200 group-hover:text-purple-600 group-hover:-rotate-45 group-hover:bg-purple-50">
+                            <i className="fa-solid fa-arrow-right text-base"></i>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-8 relative z-10">
+                        <h4 className="text-2xl font-extrabold text-[var(--texto-principal)] mb-1.5 tracking-tight transition-colors duration-300">Venta Digital</h4>
+                        <p className="text-[0.9rem] text-[var(--texto-secundario)] font-medium transition-colors duration-300">Registrar pagos con Yape o Plin</p>
+                    </div>
+
+                    <div className="absolute -bottom-6 -right-6 text-[12rem] text-purple-500 opacity-0 group-hover:opacity-5 transition-opacity duration-500 -z-10 transform group-hover:scale-110 group-hover:-rotate-12">
                         <i className="fa-solid fa-qrcode"></i>
                     </div>
-                    <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--texto-principal)', fontSize: '1.1rem' }}>Venta Digital</h4>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--texto-secundario)' }}>Registrar pagos con Yape o Plin</p>
                 </div>
 
-                <div className="card-accion" onClick={() => navigate('/tarjeta')} style={{ background: 'var(--color-header)', padding: '1.5rem', borderRadius: '16px', boxShadow: 'var(--sombra-md)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', border: '1px solid var(--border-color)' }} onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--sombra-lg)' }} onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--sombra-md)' }}>
-                    <div style={{ background: '#dbeafe', width: '55px', height: '55px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb', fontSize: '1.5rem', marginBottom: '1rem' }}>
+                <div 
+                    onClick={() => navigate('/tarjeta')} 
+                    className="group relative bg-[var(--color-header)] p-8 rounded-[2rem] shadow-sm border border-[var(--border-color)] hover:border-blue-300 hover:shadow-[0_20px_40px_rgba(59,130,246,0.15)] transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between min-h-[220px] z-10 hover:-translate-y-1.5"
+                >
+                    <div className="flex justify-between items-start w-full">
+                        <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 text-3xl transition-all duration-300 group-hover:bg-blue-600 group-hover:text-white shadow-inner">
+                            <i className="fa-regular fa-credit-card"></i>
+                        </div>
+                        <div className="w-10 h-10 rounded-full border border-[var(--border-color)] flex items-center justify-center text-[var(--texto-secundario)] transition-all duration-300 group-hover:border-blue-200 group-hover:text-blue-600 group-hover:-rotate-45 group-hover:bg-blue-50">
+                            <i className="fa-solid fa-arrow-right text-base"></i>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-8 relative z-10">
+                        <h4 className="text-2xl font-extrabold text-[var(--texto-principal)] mb-1.5 tracking-tight transition-colors duration-300">Venta Tarjeta</h4>
+                        <p className="text-[0.9rem] text-[var(--texto-secundario)] font-medium transition-colors duration-300">Cobros con terminal POS</p>
+                    </div>
+
+                    <div className="absolute -bottom-6 -right-6 text-[12rem] text-blue-500 opacity-0 group-hover:opacity-5 transition-opacity duration-500 -z-10 transform group-hover:scale-110 group-hover:-rotate-12">
                         <i className="fa-regular fa-credit-card"></i>
                     </div>
-                    <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--texto-principal)', fontSize: '1.1rem' }}>Venta Tarjeta</h4>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--texto-secundario)' }}>Cobros con terminal POS</p>
                 </div>
 
-                <div className="card-accion" onClick={() => navigate('/historial')} style={{ background: 'var(--color-header)', padding: '1.5rem', borderRadius: '16px', boxShadow: 'var(--sombra-md)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', border: '1px solid var(--border-color)' }} onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--sombra-lg)' }} onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--sombra-md)' }}>
-                    <div style={{ background: '#fef3c7', width: '55px', height: '55px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d97706', fontSize: '1.5rem', marginBottom: '1rem' }}>
+                <div 
+                    onClick={() => navigate('/historial')} 
+                    className="group relative bg-[var(--color-header)] p-8 rounded-[2rem] shadow-sm border border-[var(--border-color)] hover:border-amber-300 hover:shadow-[0_20px_40px_rgba(245,158,11,0.15)] transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between min-h-[220px] z-10 hover:-translate-y-1.5"
+                >
+                    <div className="flex justify-between items-start w-full">
+                        <div className="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-500 text-3xl transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white shadow-inner">
+                            <i className="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <div className="w-10 h-10 rounded-full border border-[var(--border-color)] flex items-center justify-center text-[var(--texto-secundario)] transition-all duration-300 group-hover:border-amber-200 group-hover:text-amber-600 group-hover:-rotate-45 group-hover:bg-amber-50">
+                            <i className="fa-solid fa-arrow-right text-base"></i>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-8 relative z-10">
+                        <h4 className="text-2xl font-extrabold text-[var(--texto-principal)] mb-1.5 tracking-tight transition-colors duration-300">Historial</h4>
+                        <p className="text-[0.9rem] text-[var(--texto-secundario)] font-medium transition-colors duration-300">Revisar o anular operaciones</p>
+                    </div>
+
+                    <div className="absolute -bottom-6 -right-6 text-[12rem] text-amber-500 opacity-0 group-hover:opacity-5 transition-opacity duration-500 -z-10 transform group-hover:scale-110 group-hover:-rotate-12">
                         <i className="fa-solid fa-clock-rotate-left"></i>
                     </div>
-                    <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--texto-principal)', fontSize: '1.1rem' }}>Historial</h4>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--texto-secundario)' }}>Revisar o anular operaciones</p>
                 </div>
+
             </div>
-            
-            <style>
-                {`
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(15px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-
-                    /* =========================================
-                       DISEÑO DE LA TARJETA PRINCIPAL (DESKTOP)
-                       ========================================= */
-                    .card-bienvenida {
-                        background: linear-gradient(135deg, var(--color-primario) 0%, #8b0000 100%);
-                        border-radius: 20px;
-                        padding: 3rem;
-                        color: white;
-                        margin-bottom: 2.5rem;
-                        box-shadow: 0 10px 25px rgba(230,0,35,0.2);
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                    }
-
-                    .texto-bienvenida {
-                        flex: 1;
-                    }
-
-                    .contenedor-gatito {
-                        position: relative;
-                        width: 230px;
-                        height: 180px;
-                        margin-left: 2rem;
-                        flex-shrink: 0;
-                    }
-
-                    /* =========================================
-                       ESTILOS DE LA BURBUJA (DESKTOP: A LA IZQUIERDA)
-                       ========================================= */
-                    .burbuja-gato {
-                        position: absolute;
-                        top: 30px; 
-                        right: 100%; 
-                        margin-right: -40px; 
-                        width: max-content; 
-                        background: #ffffff;
-                        color: #333333;
-                        padding: 12px 20px;
-                        border-radius: 20px;
-                        font-size: 0.95rem;
-                        font-weight: 700;
-                        text-align: center;
-                        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-                        z-index: 10;
-                        animation: flotarBurbuja 3s ease-in-out infinite; 
-                    }
-
-                    .burbuja-gato::after {
-                        content: '';
-                        position: absolute;
-                        top: 50%; 
-                        right: -12px;
-                        transform: translateY(-50%); 
-                        border-width: 10px 0 10px 15px;
-                        border-style: solid;
-                        border-color: transparent transparent transparent #ffffff;
-                        display: block;
-                        width: 0;
-                    }
-
-                    @keyframes flotarBurbuja {
-                        0% { transform: translateY(0px); }
-                        50% { transform: translateY(-8px); }
-                        100% { transform: translateY(0px); }
-                    }
-
-                    /* =========================================
-                       DISEÑO RESPONSIVO (CELULARES Y TABLETS)
-                       ========================================= */
-                    @media (max-width: 768px) {
-                        .card-bienvenida {
-                            flex-direction: column;
-                            text-align: center;
-                            padding: 2rem 1.5rem;
-                            gap: 3rem; /* Da espacio para que la burbuja no tape el texto */
-                        }
-
-                        .contenedor-gatito {
-                            margin-left: 0;
-                            width: 200px; /* Gatito un poco más pequeño en celular */
-                            height: 140px;
-                            margin-top: 0.5rem; /* Ajusta el espacio entre el texto y el gatito */
-                        }
-
-                        .texto-bienvenida h1 {
-                            font-size: 2rem !important; /* Texto un poco más pequeño */
-                        }
-
-                        /* Burbuja pasa arriba del gatito en celular */
-                        .burbuja-gato {
-                            top: -25px;
-                            right: auto;
-                            left: 50%;
-                            margin-right: 0;
-                            transform: translateX(-50%);
-                            animation: flotarBurbujaMobile 3s ease-in-out infinite;
-                        }
-
-                        /* Piquito de la burbuja apunta hacia abajo */
-                        .burbuja-gato::after {
-                            top: auto;
-                            bottom: -10px;
-                            right: auto;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            border-width: 12px 10px 0 10px;
-                            border-color: #ffffff transparent transparent transparent;
-                        }
-                    }
-
-                    /* Animación adaptada para no perder el centrado en celular */
-                    @keyframes flotarBurbujaMobile {
-                        0% { transform: translate(-50%, 0px); }
-                        50% { transform: translate(-50%, -8px); }
-                        100% { transform: translate(-50%, 0px); }
-                    }
-                `}
-            </style>
         </div>
     );
 };
