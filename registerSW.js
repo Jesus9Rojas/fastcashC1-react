@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/fastcashC1-react/sw.js', { scope: '/fastcashC1-react/' })})}

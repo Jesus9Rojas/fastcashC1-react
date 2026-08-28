@@ -1,0 +1,126 @@
+import{a as e,c as t,d as n,i as r,n as i,o as a,r as o,s,t as c,y as l}from"./index-DcOtlrkL.js";import{t as u}from"./ContadorAnimado-CjNvoCnL.js";import{t as d}from"./html2pdf-BQ4PrcHK.js";var f=l(n(),1),p=l(c(),1),m=l(d(),1),h=`/fastcashC1-react/assets/codigo-qr-icon-BNx0zmFv.png`,g=s(),_=()=>{let{usuario:n,logout:s,cajaAbierta:c,setCajaAbierta:l}=(0,f.useContext)(a),d=t(),_=(0,f.useRef)(null),[v,y]=(0,f.useState)({yape:0,tarjeta:0,transferencia:0,anulado:0,total:0,saldoEsperado:0}),[b,x]=(0,f.useState)([]),[S,C]=(0,f.useState)(!1),[w,T]=(0,f.useState)(!0),[E,D]=(0,f.useState)(null);(0,f.useEffect)(()=>{let e=!0;return(async()=>{if(!c){e&&T(!1);return}try{let t=n?.usuarioID||n?.UsuarioID,r=(await i.get(`/reportes/cierre-actual/${t}`)).data;e&&y({yape:parseFloat(r.ventasQR||r.VentasQR||r.ventasqr||0),tarjeta:parseFloat(r.ventasTarjeta||r.VentasTarjeta||r.ventastarjeta||0),transferencia:parseFloat(r.ventasTransferencia||r.VentasTransferencia||r.ventastransferencia||0),anulado:parseFloat(r.totalAnulado||r.TotalAnulado||r.totalanulado||0),total:parseFloat(r.totalVendido||r.TotalVendido||r.totalvendido||0),saldoEsperado:parseFloat(r.saldoEsperadoEnCaja||r.SaldoEsperadoEnCaja||r.saldoesperadoencaja||0)})}catch(e){console.error(e),p.default.fire(`Error`,`No se pudo cargar el resumen del día`,`error`)}finally{e&&T(!1)}})(),()=>{e=!1}},[c,n]);let O=()=>{let e=_.current.innerHTML,t=window.open(``,`PRINT`,`height=600,width=400`);t.document.write(`
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Ticket de Cierre</title>
+                    <style>
+                        @page { margin: 0; size: auto; }
+                        body { 
+                            margin: 0; 
+                            padding: 10px;
+                            font-family: 'Courier New', Courier, monospace;
+                            font-size: 12px; 
+                            color: #000;
+                            width: 100%;
+                            box-sizing: border-box;
+                        }
+                        
+                        .text-center { text-align: center; }
+                        .text-left { text-align: left; }
+                        .text-right { text-align: right; }
+                        .font-bold, .font-extrabold, .font-black { font-weight: bold; }
+                        .text-[11px], .text-xs { font-size: 10px; }
+                        .text-sm { font-size: 13px; }
+                        .text-base, .text-[15px] { font-size: 15px; }
+                        
+                        .m-0 { margin: 0; }
+                        .m-1 { margin: 4px; }
+                        .m-0\\.5 { margin: 2px; }
+                        .my-2 { margin-top: 8px; margin-bottom: 8px; }
+                        .my-3 { margin-top: 12px; margin-bottom: 12px; }
+                        .mt-2 { margin-top: 8px; }
+                        .mt-3 { margin-top: 12px; }
+                        .mt-4 { margin-top: 16px; }
+                        .mt-5 { margin-top: 20px; }
+                        .mb-1 { margin-bottom: 4px; }
+                        .mb-2 { margin-bottom: 8px; }
+                        .pb-2 { padding-bottom: 8px; }
+                        .px-3 { padding-left: 12px; padding-right: 12px; }
+                        .py-1 { padding-top: 4px; padding-bottom: 4px; }
+                        
+                        .flex { display: flex; }
+                        .justify-between { justify-content: space-between; }
+                        .w-full { width: 100%; }
+                        .inline-block { display: inline-block; }
+                        .block { display: block; }
+                        
+                        .border-t { border-top: 1px solid #000; }
+                        .border-b { border-bottom: 1px solid #000; }
+                        .border-2 { border: 2px solid #000; }
+                        .border-dashed { border-style: dashed; }
+                        
+                        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+                        th, td { padding: 4px 2px; vertical-align: top; word-wrap: break-word; overflow-wrap: break-word; }
+                        th { border-bottom: 1px dashed #000; }
+                        .w-\\[22\\%\\] { width: 22%; }
+                        .w-\\[50\\%\\] { width: 50%; }
+                        .w-\\[28\\%\\] { width: 28%; text-align: right; }
+                        
+                        .italic { font-style: italic; }
+                        .break-all { word-break: break-all; }
+                        
+                        img { 
+                            max-width: 140px; 
+                            height: auto; 
+                            margin: 0 auto 8px auto; 
+                            display: block; 
+                            filter: grayscale(100%) contrast(1.5); 
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${e}
+                </body>
+            </html>
+        `),t.document.close(),t.focus(),setTimeout(()=>{t.print(),t.close()},500)},k=async e=>{if(!c){p.default.fire(`Aviso`,`La caja ya se encuentra cerrada.`,`info`);return}let t=e===`DETALLE`;if((await p.default.fire({html:`
+                <div class="flex flex-col items-center mt-2">
+                    <div class="w-20 h-20 bg-red-50 rounded-[1.5rem] flex items-center justify-center text-red-500 mb-5 shadow-[0_10px_20px_-5px_rgba(239,68,68,0.3)]">
+                        <i class="fa-solid fa-cash-register text-4xl animate-pulse"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-[var(--texto-principal)] tracking-tight mb-2">¿Cerrar Turno ${t?`Detallado`:`Resumen`}?</h2>
+                    <p class="text-[var(--texto-secundario)] font-medium text-sm text-center px-2">
+                        Esta acción finalizará tu turno, generará los reportes impresos y en PDF, y <b class="text-red-500">cerrará tu sesión actual</b> de forma segura.
+                    </p>
+                </div>
+            `,showCancelButton:!0,confirmButtonText:`<i class="fa-solid fa-lock mr-2"></i> Sí, Cerrar Caja`,cancelButtonText:`Cancelar`,buttonsStyling:!1,customClass:{popup:`rounded-[2.5rem] p-6 border-2 border-[var(--border-color)] bg-[var(--color-header)] shadow-2xl max-w-md w-full`,actions:`flex flex-row justify-center gap-4 w-full mt-6 px-2 pb-2 box-border`,confirmButton:`whitespace-nowrap flex-1 bg-red-600 hover:bg-red-700 text-white rounded-2xl py-3.5 px-4 font-bold shadow-md hover:shadow-lg transition-all text-sm outline-none m-0`,cancelButton:`whitespace-nowrap flex-1 bg-[var(--color-header)] border-2 border-[var(--border-color)] hover:bg-[var(--color-fondo-app)] text-[var(--texto-principal)] rounded-2xl py-3.5 px-4 font-bold transition-all text-sm outline-none m-0`}})).isConfirmed){D(e);try{let e=n?.usuarioID||n?.UsuarioID,r=n?.nombreCompleto||n?.NombreCompleto||n?.username||`CAJERO`;if(t){let t=await i.get(`/reportes/cierre-detalle/${e}`);x(t.data)}C(t),await i.post(`/caja/cerrar`,{usuarioID:parseInt(e),usuarioId:parseInt(e),saldoFinalReal:v.saldoEsperado,saldofinalreal:v.saldoEsperado}),await new Promise(e=>setTimeout(e,100));let a=new Date().toISOString().slice(0,10),o=t&&b.length>10?200+b.length*10:250,c={margin:.1,filename:`Cierre_${t?`Detallado`:`Resumen`}_${r.replace(/\s+/g,`_`)}_${a}.pdf`,image:{type:`jpeg`,quality:.98},html2canvas:{scale:2},jsPDF:{unit:`mm`,format:[80,o],orientation:`portrait`}};await(0,m.default)().set(c).from(_.current).save(),setTimeout(()=>{O(),p.default.fire({html:`
+                        <div class="flex flex-col items-center mt-2">
+                            <div class="w-20 h-20 bg-emerald-50 rounded-[1.5rem] flex items-center justify-center text-emerald-500 mb-5 shadow-[0_10px_20px_-5px_rgba(16,185,129,0.3)]">
+                                <i class="fa-solid fa-check text-4xl"></i>
+                            </div>
+                            <h2 class="text-2xl font-black text-[var(--texto-principal)] tracking-tight mb-2">Caja Cerrada</h2>
+                            <p class="text-[var(--texto-secundario)] font-medium text-sm text-center px-2">
+                                Se cerrará tu sesión automáticamente.
+                            </p>
+                        </div>
+                    `,timer:2e3,showConfirmButton:!1,customClass:{popup:`rounded-[2.5rem] p-6 border-2 border-[var(--border-color)] bg-[var(--color-header)] shadow-2xl max-w-sm w-full`}}),setTimeout(()=>{l(!1),s(),d(`/login`)},1500)},800)}catch(e){console.error(e);let t=e.response?.data?.mensaje||e.response?.data?.error||`Error al cerrar la caja`;p.default.fire({html:`
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="w-20 h-20 bg-red-50 rounded-[1.5rem] flex items-center justify-center text-red-500 mb-5 shadow-[0_10px_20px_-5px_rgba(239,68,68,0.3)]">
+                            <i class="fa-solid fa-triangle-exclamation text-4xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-[var(--texto-principal)] tracking-tight mb-2">Error Crítico</h2>
+                        <p class="text-[var(--texto-secundario)] font-medium text-sm text-center px-2">
+                            ${t}
+                        </p>
+                    </div>
+                `,confirmButtonText:`Aceptar`,buttonsStyling:!1,customClass:{popup:`rounded-[2.5rem] p-6 border-2 border-[var(--border-color)] bg-[var(--color-header)] shadow-2xl max-w-sm w-full`,actions:`flex w-full mt-6 px-2 pb-2`,confirmButton:`w-full bg-red-600 hover:bg-red-700 text-white rounded-2xl py-3.5 font-bold shadow-md hover:shadow-lg transition-all text-sm outline-none m-0`}}),D(null)}}};if(!c)return(0,g.jsx)(`section`,{className:`block animate-fade-in w-full max-w-full`,children:(0,g.jsxs)(`div`,{className:`text-center py-16 px-4`,children:[(0,g.jsx)(`i`,{className:`fa-solid fa-lock text-6xl text-gray-400 mb-4`}),(0,g.jsx)(`h2`,{className:`text-2xl font-bold text-[var(--texto-principal)]`,children:`Caja Cerrada`}),(0,g.jsx)(`p`,{className:`text-[var(--texto-secundario)] mt-2`,children:`Abre la caja desde la barra superior para iniciar tu turno.`})]})});if(w)return(0,g.jsxs)(`div`,{className:`text-center py-20 text-[var(--texto-secundario)] flex flex-col items-center`,children:[(0,g.jsx)(`i`,{className:`fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-4`}),(0,g.jsx)(`span`,{className:`font-bold tracking-wide`,children:`Cargando resumen del día...`})]});let A=new Date().toLocaleDateString(`es-PE`),j=new Date().toLocaleTimeString(`es-PE`,{hour:`2-digit`,minute:`2-digit`}),M=(n?.nombreCompleto||n?.NombreCompleto||n?.username||`CAJERO`).toUpperCase();return(0,g.jsxs)(`section`,{className:`block animate-fade-in w-full max-w-full pb-8 pt-4`,children:[(0,g.jsxs)(`div`,{className:`bg-[var(--color-header)] rounded-[2rem] shadow-sm border border-[var(--border-color)] flex flex-col overflow-hidden transition-colors duration-300 p-6 md:p-8`,children:[(0,g.jsxs)(`div`,{className:`flex flex-col sm:flex-row justify-between sm:items-center w-full mb-8 pb-6 border-b border-[var(--border-color)] gap-6`,children:[(0,g.jsxs)(`div`,{children:[(0,g.jsxs)(`h2`,{className:`text-3xl font-black text-[var(--texto-principal)] tracking-tight flex items-center gap-3 mb-1`,children:[(0,g.jsx)(`i`,{className:`fa-solid fa-flag-checkered text-[var(--texto-principal)]`}),`Cierre de Turno`]}),(0,g.jsx)(`p`,{className:`text-[var(--texto-secundario)] font-medium text-[15px]`,children:`Resumen de operaciones y auditoría del día.`})]}),(0,g.jsxs)(`div`,{className:`bg-blue-50 text-blue-700 px-5 py-2.5 rounded-xl font-bold text-sm border border-blue-100 shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto`,children:[(0,g.jsx)(`i`,{className:`fa-regular fa-calendar-days`}),` `,(0,g.jsx)(`span`,{children:A})]})]}),(0,g.jsxs)(`div`,{className:`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10`,children:[(0,g.jsxs)(`div`,{className:`group relative bg-[var(--color-header)] rounded-3xl p-7 overflow-hidden transition-all duration-300 border border-[var(--border-color)] border-l-4 border-l-red-600 shadow-sm hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between h-56 z-10 animate-fade-in`,style:{animationDelay:`100ms`},children:[(0,g.jsx)(`div`,{className:`w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-inner bg-gradient-to-br from-red-500 to-red-700`,children:(0,g.jsx)(`img`,{src:h,alt:`Yape`,className:`w-7 h-7 object-contain brightness-0 invert`})}),(0,g.jsxs)(`div`,{children:[(0,g.jsx)(`span`,{className:`text-[0.85rem] text-[var(--texto-secundario)] font-bold uppercase tracking-wider block mb-1.5`,children:`Billeteras Digitales`}),(0,g.jsxs)(`h3`,{className:`text-3xl font-extrabold text-[var(--texto-principal)] m-0 font-mono tracking-tight`,children:[`S/ `,(0,g.jsx)(u,{valorFinal:v.yape})]})]}),(0,g.jsx)(`div`,{className:`text-sm mt-auto pt-4 font-bold text-red-600`,children:`Yape / Plin`}),(0,g.jsx)(`div`,{className:`absolute -right-5 -bottom-5 w-28 h-28 opacity-5 group-hover:opacity-10 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500 -z-10 bg-contain bg-no-repeat bg-center grayscale`,style:{backgroundImage:`url(${h})`}})]}),(0,g.jsxs)(`div`,{className:`group relative bg-[var(--color-header)] rounded-3xl p-7 overflow-hidden transition-all duration-300 border border-[var(--border-color)] border-l-4 border-l-blue-500 shadow-sm hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between h-56 z-10 animate-fade-in`,style:{animationDelay:`200ms`},children:[(0,g.jsx)(`div`,{className:`w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-inner bg-gradient-to-br from-blue-400 to-blue-600`,children:(0,g.jsx)(`img`,{src:o,alt:`Tarjeta`,className:`w-6 h-6 object-contain brightness-0 invert`})}),(0,g.jsxs)(`div`,{children:[(0,g.jsx)(`span`,{className:`text-[0.85rem] text-[var(--texto-secundario)] font-bold uppercase tracking-wider block mb-1.5`,children:`Cobros Tarjeta`}),(0,g.jsxs)(`h3`,{className:`text-3xl font-extrabold text-[var(--texto-principal)] m-0 font-mono tracking-tight`,children:[`S/ `,(0,g.jsx)(u,{valorFinal:v.tarjeta})]})]}),(0,g.jsx)(`div`,{className:`text-sm mt-auto pt-4 font-bold text-blue-500`,children:`Visa / Master`}),(0,g.jsx)(`div`,{className:`absolute -right-5 -bottom-5 w-28 h-28 opacity-5 group-hover:opacity-10 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500 -z-10 bg-contain bg-no-repeat bg-center grayscale`,style:{backgroundImage:`url(${o})`}})]}),(0,g.jsxs)(`div`,{className:`group relative bg-[var(--color-header)] rounded-3xl p-7 overflow-hidden transition-all duration-300 border border-[var(--border-color)] border-l-4 border-l-emerald-600 shadow-sm hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between h-56 z-10 animate-fade-in`,style:{animationDelay:`300ms`},children:[(0,g.jsx)(`div`,{className:`w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-inner bg-gradient-to-br from-emerald-500 to-emerald-700`,children:(0,g.jsx)(`img`,{src:r,alt:`Transferencia`,className:`w-6 h-6 object-contain brightness-0 invert`})}),(0,g.jsxs)(`div`,{children:[(0,g.jsx)(`span`,{className:`text-[0.85rem] text-[var(--texto-secundario)] font-bold uppercase tracking-wider block mb-1.5`,children:`Transferencias`}),(0,g.jsxs)(`h3`,{className:`text-3xl font-extrabold text-[var(--texto-principal)] m-0 font-mono tracking-tight`,children:[`S/ `,(0,g.jsx)(u,{valorFinal:v.transferencia})]})]}),(0,g.jsx)(`div`,{className:`text-sm mt-auto pt-4 font-bold text-emerald-600`,children:`Bancos Directos`}),(0,g.jsx)(`div`,{className:`absolute -right-5 -bottom-5 w-28 h-28 opacity-5 group-hover:opacity-10 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500 -z-10 bg-contain bg-no-repeat bg-center grayscale`,style:{backgroundImage:`url(${r})`}})]}),(0,g.jsxs)(`div`,{className:`relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-7 overflow-hidden transition-all duration-300 shadow-lg hover:-translate-y-1 flex flex-col justify-between h-56 z-10 text-white animate-fade-in`,style:{animationDelay:`400ms`},children:[(0,g.jsx)(`div`,{className:`w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-white/10 backdrop-blur-sm text-emerald-400 text-2xl`,children:(0,g.jsx)(`i`,{className:`fa-solid fa-money-bill-wave`})}),(0,g.jsxs)(`div`,{children:[(0,g.jsx)(`span`,{className:`text-[0.85rem] text-gray-400 font-bold uppercase tracking-wider block mb-1.5`,children:`Venta Total Real`}),(0,g.jsxs)(`h1`,{className:`text-4xl font-black text-emerald-400 m-0 font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]`,children:[`S/ `,(0,g.jsx)(u,{valorFinal:v.total})]})]}),(0,g.jsx)(`div`,{className:`absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500 rounded-full blur-3xl opacity-20 pointer-events-none`})]})]}),(0,g.jsxs)(`div`,{className:`flex flex-col lg:flex-row gap-8 items-start`,children:[(0,g.jsxs)(`div`,{className:`bg-[var(--color-fondo-app)] p-8 rounded-[2rem] border border-[var(--border-color)] flex flex-col items-center w-full lg:w-7/12 shadow-inner min-h-[450px]`,children:[(0,g.jsxs)(`div`,{className:`text-[11px] uppercase text-[var(--texto-secundario)] mb-6 font-bold tracking-widest flex items-center gap-2`,children:[(0,g.jsx)(`i`,{className:`fa-regular fa-file-lines`}),` Previsualización del Ticket`]}),(0,g.jsxs)(`div`,{ref:_,id:`ticketImpresion`,className:`bg-white w-full max-w-[320px] p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] font-mono text-[13px] text-black relative pb-10 transition-all duration-300 hover:-translate-y-1`,style:{maskImage:`radial-gradient(circle at bottom, transparent 6px, black 6.5px)`,maskSize:`20px 100%`,maskPosition:`bottom`,maskRepeat:`repeat-x`,WebkitMaskImage:`radial-gradient(circle at bottom, transparent 6px, black 6.5px)`,WebkitMaskSize:`20px 100%`,WebkitMaskPosition:`bottom`,WebkitMaskRepeat:`repeat-x`},children:[(0,g.jsxs)(`div`,{className:`text-center`,children:[(0,g.jsx)(`img`,{src:e,className:`w-28 h-auto mx-auto mb-2 block grayscale contrast-150`,alt:`Logo`}),(0,g.jsx)(`h3`,{className:`m-1 text-base font-bold`,children:`ROJAS SUPER NV`}),(0,g.jsx)(`p`,{className:`m-0 leading-tight`,children:`RUC: 20606916061`}),(0,g.jsx)(`p`,{className:`m-0 leading-tight text-[11px]`,children:`MZA-A23 LT.13 A.H MARIA REICHE`}),(0,g.jsx)(`div`,{className:`border-t border-dashed border-black my-3`}),(0,g.jsx)(`h4`,{className:`border-2 border-black inline-block px-3 py-1 my-2 font-extrabold text-sm`,children:`CIERRE DE TURNO`}),(0,g.jsxs)(`div`,{className:`text-left mt-2`,children:[(0,g.jsxs)(`p`,{className:`m-0.5 flex justify-between`,children:[(0,g.jsx)(`span`,{children:`Fecha:`}),` `,(0,g.jsx)(`span`,{children:A})]}),(0,g.jsxs)(`p`,{className:`m-0.5 flex justify-between`,children:[(0,g.jsx)(`span`,{children:`Hora:`}),` `,(0,g.jsx)(`span`,{children:j})]}),(0,g.jsxs)(`p`,{className:`m-0.5 flex justify-between`,children:[(0,g.jsx)(`span`,{children:`Cajero:`}),` `,(0,g.jsx)(`span`,{children:M})]})]}),(0,g.jsx)(`div`,{className:`border-t border-dashed border-black my-3`})]}),(0,g.jsxs)(`div`,{children:[(0,g.jsxs)(`div`,{className:`flex justify-between mb-1`,children:[(0,g.jsx)(`span`,{children:`YAPE/PLIN:`}),(0,g.jsxs)(`span`,{children:[`S/ `,v.yape.toFixed(2)]})]}),(0,g.jsxs)(`div`,{className:`flex justify-between mb-1`,children:[(0,g.jsx)(`span`,{children:`TARJETAS:`}),(0,g.jsxs)(`span`,{children:[`S/ `,v.tarjeta.toFixed(2)]})]}),(0,g.jsxs)(`div`,{className:`flex justify-between mb-1`,children:[(0,g.jsx)(`span`,{children:`TRANSF:`}),(0,g.jsxs)(`span`,{children:[`S/ `,v.transferencia.toFixed(2)]})]}),(0,g.jsxs)(`div`,{className:`flex justify-between mb-1 text-red-600 font-semibold`,children:[(0,g.jsx)(`span`,{children:`(-) ANULADO:`}),(0,g.jsxs)(`span`,{children:[`S/ `,v.anulado.toFixed(2)]})]}),(0,g.jsx)(`div`,{className:`border-t border-dashed border-black my-2 mt-3`}),(0,g.jsxs)(`div`,{className:`flex justify-between mt-2 font-black text-[15px]`,children:[(0,g.jsx)(`span`,{children:`TOTAL VENDIDO:`}),(0,g.jsxs)(`span`,{children:[`S/ `,v.total.toFixed(2)]})]}),S&&(0,g.jsxs)(`div`,{className:`mt-4 pb-2`,children:[(0,g.jsx)(`div`,{className:`border-t border-dashed border-black mb-2`}),(0,g.jsx)(`h4`,{className:`text-center m-0 mb-2 text-[11px] font-bold`,children:`DETALLE DE TRANSACCIONES`}),(0,g.jsxs)(`table`,{className:`w-full text-[10px] text-left border-collapse font-mono leading-tight`,children:[(0,g.jsx)(`thead`,{children:(0,g.jsxs)(`tr`,{className:`border-b border-dashed border-black`,children:[(0,g.jsx)(`th`,{className:`py-1 w-[22%]`,children:`HORA`}),(0,g.jsx)(`th`,{className:`p-1 w-[50%]`,children:`OP/REF`}),(0,g.jsx)(`th`,{className:`text-right py-1 w-[28%]`,children:`MONTO`})]})}),(0,g.jsx)(`tbody`,{children:b.length===0?(0,g.jsx)(`tr`,{children:(0,g.jsx)(`td`,{colSpan:`3`,className:`text-center py-2`,children:`Sin transacciones`})}):b.map((e,t)=>{let n=e.fechaemision||e.fechaEmision||e.FechaEmision,r=String(e.formapago||e.formaPago||e.FormaPago||``).toUpperCase(),i=String(e.entidadbancaria||e.entidadBancaria||e.EntidadBancaria||`-`).toUpperCase(),a=e.numerooperacion||e.numeroOperacion||e.NumeroOperacion||`-`,o=parseFloat(e.montopagado||e.montoPagado||e.MontoPagado||0).toFixed(2),s=new Date(n).toLocaleTimeString(`es-PE`,{hour:`2-digit`,minute:`2-digit`}),c=`EFECTIVO`;if(r!==`EFECTIVO`){let e=r;r===`TARJETA`&&i!==`-`?e=i:r===`TRANSFERENCIA`?e=`TRANSF`:(r===`QR`||r===`YAPE`||r===`PLIN`)&&(e=`QR ${i===`-`?``:i}`.trim()),c=`${e}: ${a}`}return(0,g.jsxs)(`tr`,{children:[(0,g.jsx)(`td`,{className:`py-1 align-top`,children:s}),(0,g.jsx)(`td`,{className:`p-1 break-all align-top`,children:c}),(0,g.jsxs)(`td`,{className:`py-1 text-right align-top`,children:[`S/ `,o]})]},t)})})]}),(0,g.jsx)(`div`,{className:`border-t border-dashed border-black mt-2`})]})]}),(0,g.jsx)(`div`,{className:`text-center mt-5 text-[10px] italic`,children:(0,g.jsx)(`p`,{children:`• Firma Conforme •`})})]})]}),(0,g.jsx)(`div`,{className:`w-full lg:w-5/12 flex flex-col gap-5 sticky top-6`,children:(0,g.jsxs)(`div`,{className:`bg-[var(--color-fondo-app)] rounded-[2rem] p-8 border border-[var(--border-color)] shadow-sm flex flex-col h-full`,children:[(0,g.jsxs)(`div`,{className:`mb-6`,children:[(0,g.jsxs)(`h3`,{className:`font-black text-[var(--texto-principal)] text-xl mb-2 flex items-center gap-2`,children:[(0,g.jsx)(`i`,{className:`fa-solid fa-power-off text-red-500`}),` Finalizar Turno`]}),(0,g.jsx)(`p`,{className:`text-sm text-[var(--texto-secundario)] font-medium`,children:`Selecciona el formato de cierre que deseas imprimir y descargar. Esta acción cerrará tu sesión de forma automática.`})]}),(0,g.jsxs)(`div`,{className:`flex flex-col gap-4 mt-auto`,children:[(0,g.jsxs)(`button`,{className:`w-full bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed group outline-none`,onClick:()=>k(`RESUMEN`),disabled:E!==null,children:[(0,g.jsx)(`i`,{className:`fa-solid ${E===`RESUMEN`?`fa-spinner fa-spin`:`fa-print`} text-lg group-hover:scale-110 transition-transform`}),(0,g.jsx)(`span`,{className:`tracking-wide`,children:E===`RESUMEN`?`Cerrando...`:`Cierre Resumido`})]}),(0,g.jsxs)(`button`,{className:`w-full bg-[var(--color-header)] border-2 border-[var(--border-color)] hover:bg-gray-100 text-[var(--texto-principal)] py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed group outline-none`,onClick:()=>k(`DETALLE`),disabled:E!==null,children:[(0,g.jsx)(`i`,{className:`fa-solid ${E===`DETALLE`?`fa-spinner fa-spin`:`fa-file-invoice-dollar`} text-lg group-hover:scale-110 transition-transform`}),(0,g.jsx)(`span`,{className:`tracking-wide`,children:E===`DETALLE`?`Procesando...`:`Cierre Detallado`})]})]})]})})]})]}),(0,g.jsx)(`style`,{children:`
+                    /* FIX CRÍTICO: Previene el error de "oklch" de html2canvas (incompatibilidad con Tailwind v4) */
+                    #ticketImpresion, #ticketImpresion * {
+                        border-color: transparent !important;
+                        outline-color: transparent !important;
+                        text-decoration-color: transparent !important;
+                        color: #000000 !important;
+                    }
+                    #ticketImpresion {
+                        background-color: #ffffff !important;
+                    }
+                    #ticketImpresion .border-black {
+                        border-color: #000000 !important;
+                    }
+                    #ticketImpresion .text-red-600, #ticketImpresion .text-red-600 * {
+                        color: #dc2626 !important;
+                    }
+                    @keyframes fade-slide-down {
+                        from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+                        to { opacity: 1; transform: translateY(0) scale(1); }
+                    }
+                `})]})};export{_ as default};
