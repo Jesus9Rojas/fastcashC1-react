@@ -43,29 +43,29 @@ const Bienvenida = () => {
     const primerNombre = usuario?.nombreCompleto?.split(' ')[0] || 'Humano';
 
     return (
-        <div className="animate-fade-in pb-12 px-2 max-w-7xl mx-auto font-sans transition-colors duration-300">
+        <div className="animate-fade-in pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans transition-colors duration-300">
             
-            <div className="flex flex-col-reverse md:flex-row items-center md:items-end justify-between mt-8 mb-20 gap-10 md:gap-0">
+            <div className="flex flex-col md:flex-row items-center justify-between mt-4 md:mt-12 mb-16 md:mb-24 gap-12 md:gap-8">
                 
-                <div className="text-center md:text-left z-10 w-full md:w-auto">
-                    <h1 className="text-5xl sm:text-6xl lg:text-[5rem] font-black text-[var(--texto-principal)] tracking-tighter mb-2 leading-tight transition-colors duration-300">
+                <div className="text-center md:text-left z-10 w-full md:w-[55%] lg:w-[60%] order-1">
+                    <h1 className="text-4xl sm:text-5xl lg:text-[4.5rem] xl:text-[5rem] font-black text-[var(--texto-principal)] tracking-tighter mb-4 leading-[1.1] transition-colors duration-300">
                         {saludo}, <br className="hidden md:block" />
                         <span className="text-[var(--color-primario)]">{primerNombre}</span>
                     </h1>
-                    <p className="text-[var(--texto-secundario)] font-semibold text-lg lg:text-xl max-w-lg mx-auto md:mx-0 mt-4 transition-colors duration-300">
+                    <p className="text-[var(--texto-secundario)] font-medium text-base sm:text-lg lg:text-xl max-w-lg mx-auto md:mx-0 transition-colors duration-300">
                         ¿Qué deseas hacer en este turno? Selecciona una acción rápida para comenzar.
                     </p>
                 </div>
 
-                <div className="relative w-56 h-56 md:w-72 md:h-72 flex-shrink-0 z-10 mt-12 md:mt-0 md:mr-10">
+                <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-72 md:h-72 flex-shrink-0 z-10 order-2 mt-8 md:mt-0">
                     
-                    <div className="absolute top-[10%] md:top-[5%] right-[75%] md:right-[75%] animate-float z-20 w-max pointer-events-none">
-                        <div className="bg-[var(--color-header)] border border-[var(--border-color)] shadow-[0_15px_35px_rgba(0,0,0,0.1)] rounded-2xl px-6 py-4 text-[0.95rem] font-extrabold text-[var(--texto-principal)] relative transition-colors duration-300">
+                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 md:top-[10%] md:left-auto md:right-[85%] md:translate-x-0 animate-float z-20 w-max pointer-events-none">
+                        <div className="bg-[var(--color-header)] border border-[var(--border-color)] shadow-[0_15px_35px_rgba(0,0,0,0.15)] rounded-2xl px-5 py-3 md:px-6 md:py-4 text-sm md:text-[0.95rem] font-extrabold text-[var(--texto-principal)] relative transition-colors duration-300 text-center md:text-left">
                             ¡Miau! Bienvenido,<br/>
                             <span className="text-[var(--color-primario)]">{primerNombre}</span> 🐾
                             
-                            <div className="absolute top-1/2 -right-3 transform -translate-y-1/2 w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px] border-l-[var(--border-color)]">
-                            </div>
+                            <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px] border-l-[var(--border-color)]"></div>
+                            <div className="block md:hidden absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-0 h-0 border-x-[12px] border-x-transparent border-t-[12px] border-t-[var(--border-color)]"></div>
                         </div>
                     </div>
                     

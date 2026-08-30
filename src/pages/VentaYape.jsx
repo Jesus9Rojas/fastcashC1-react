@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import { sileo, Toaster } from 'sileo';
@@ -24,6 +24,19 @@ const VentaYape = () => {
     const [comprobante, setComprobante] = useState('2'); 
     const [numOperacion, setNumOperacion] = useState('');
     const [cargando, setCargando] = useState(false);
+
+    const [dropdownBancosAbierto, setDropdownBancosAbierto] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownBancosAbierto(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const cargarDatosMaestros = async () => {
@@ -131,6 +144,11 @@ const VentaYape = () => {
         return 'bg-gray-500';
     };
 
+    const bancosVisibles = bancos.slice(0, 4);
+    const bancosOcultos = bancos.slice(4);
+    const isHiddenSelected = bancosOcultos.some(b => (b.entidadID || b.EntidadID) === bancoSeleccionado);
+    const bancoOcultoActivo = bancosOcultos.find(b => (b.entidadID || b.EntidadID) === bancoSeleccionado);
+
     return (
         <>
             <Toaster 
@@ -146,11 +164,11 @@ const VentaYape = () => {
                 }}
             />
 
-            <section className={`animate-fade-in w-full h-full pb-8 pt-4 transition-opacity duration-500 ${cajaAbierta ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
+            <section className={`animate-fade-in w-full pb-10 lg:pb-12 pt-4 lg:pt-6 transition-opacity duration-500 ${cajaAbierta ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
                 
-                <div className="relative flex flex-col lg:flex-row gap-6 lg:gap-6 max-w-[1100px] mx-auto">
+                <div className="relative flex flex-col lg:flex-row gap-6 lg:gap-6 max-w-[1100px] mx-auto mt-4 lg:mt-0">
                     
-                    <div className="absolute -top-12 left-10 w-24 z-50 pointer-events-none">
+                    <div className="absolute -top-10 lg:-top-12 left-4 lg:left-10 w-20 lg:w-24 z-50 pointer-events-none">
                          <img src={gatitoGif} alt="Gatito caminando" className="w-full h-auto mix-blend-multiply contrast-125 animate-[caminarGatito_60s_linear_infinite]" />
                     </div>
 
@@ -243,38 +261,100 @@ const VentaYape = () => {
                                     Seleccione Billetera de Destino:
                                 </label>
                                 
-                                <div className="flex flex-wrap gap-3">
+                                <div className="flex flex-wrap gap-3 relative">
                                     {bancos.length === 0 ? (
                                         <p className="text-xs text-[var(--texto-secundario)] animate-pulse">Cargando entidades...</p>
                                     ) : (
-                                        bancos.map(b => {
-                                            const idBan = b.entidadID || b.EntidadID;
-                                            const nombreBan = b.nombre || b.Nombre;
-                                            const claseDot = obtenerColorDot(nombreBan);
-                                            const estaSeleccionado = bancoSeleccionado === idBan;
+                                        <>
+                                            {bancosVisibles.map(b => {
+                                                const idBan = b.entidadID || b.EntidadID;
+                                                const nombreBan = b.nombre || b.Nombre;
+                                                const claseDot = obtenerColorDot(nombreBan);
+                                                const estaSeleccionado = bancoSeleccionado === idBan;
 
-                                            return (
-                                                <button 
-                                                    key={idBan} 
-                                                    type="button"
-                                                    onClick={() => setBancoSeleccionado(idBan)}
-                                                    className={`relative flex items-center justify-center gap-2.5 border-2 px-5 py-3 rounded-xl cursor-pointer font-bold text-sm transition-colors duration-300 flex-1 sm:flex-none ${
-                                                        estaSeleccionado 
-                                                            ? 'border-[var(--color-primario)] bg-[var(--color-header)] text-[var(--texto-principal)] shadow-sm z-10' 
-                                                            : 'bg-[var(--color-header)] border-[var(--border-color)] text-[var(--texto-secundario)] hover:border-[var(--texto-secundario)]'
-                                                    }`}
-                                                >
-                                                    <span className={`w-3 h-3 rounded-full flex-shrink-0 ${claseDot}`}></span> 
-                                                    {nombreBan}
+                                                return (
+                                                    <button 
+                                                        key={idBan} 
+                                                        type="button"
+                                                        onClick={() => setBancoSeleccionado(idBan)}
+                                                        className={`relative flex items-center justify-center gap-2.5 border-2 px-5 py-3 rounded-xl cursor-pointer font-bold text-sm transition-colors duration-300 flex-1 sm:flex-none ${
+                                                            estaSeleccionado 
+                                                                ? 'border-[var(--color-primario)] bg-[var(--color-header)] text-[var(--texto-principal)] shadow-sm z-10' 
+                                                                : 'bg-[var(--color-header)] border-[var(--border-color)] text-[var(--texto-secundario)] hover:border-[var(--texto-secundario)]'
+                                                        }`}
+                                                    >
+                                                        <span className={`w-3 h-3 rounded-full flex-shrink-0 ${claseDot}`}></span> 
+                                                        {nombreBan}
 
-                                                    {estaSeleccionado && (
-                                                        <div className="absolute -top-2 -right-2 w-5 h-5 bg-[var(--color-primario)] border-2 border-[var(--color-header)] rounded-full flex items-center justify-center shadow-md animate-[popCheck_0.3s_ease-out_forwards]">
+                                                        {estaSeleccionado && (
+                                                            <div className="absolute -top-2 -right-2 w-5 h-5 bg-[var(--color-primario)] border-2 border-[var(--color-header)] rounded-full flex items-center justify-center shadow-md animate-[popCheck_0.3s_ease-out_forwards]">
+                                                                <i className="fa-solid fa-check text-white text-[9px]"></i>
+                                                            </div>
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                            
+                                            {bancosOcultos.length > 0 && (
+                                                <div className="relative flex-1 sm:flex-none" ref={dropdownRef}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setDropdownBancosAbierto(!dropdownBancosAbierto)}
+                                                        className={`w-full flex items-center justify-between gap-3 border-2 px-5 py-3 rounded-xl cursor-pointer font-bold text-sm transition-all duration-200 outline-none ${
+                                                            isHiddenSelected 
+                                                                ? 'border-[var(--color-primario)] bg-[var(--color-header)] text-[var(--texto-principal)] shadow-sm z-10' 
+                                                                : 'bg-[var(--color-header)] border-[var(--border-color)] text-[var(--texto-secundario)] hover:border-[var(--texto-secundario)]'
+                                                        } ${dropdownBancosAbierto ? 'ring-4 ring-[var(--color-primario)]/10 border-[var(--color-primario)]' : ''}`}
+                                                    >
+                                                        <span className="flex items-center gap-2.5 truncate">
+                                                            {isHiddenSelected && (
+                                                                <span className={`w-3 h-3 rounded-full flex-shrink-0 ${obtenerColorDot(bancoOcultoActivo?.nombre || bancoOcultoActivo?.Nombre)}`}></span>
+                                                            )}
+                                                            <span className="truncate">
+                                                                {isHiddenSelected ? (bancoOcultoActivo?.nombre || bancoOcultoActivo?.Nombre) : `Más bancos (${bancosOcultos.length})`}
+                                                            </span>
+                                                        </span>
+                                                        <i className={`fa-solid fa-chevron-down transition-transform duration-300 text-xs flex-shrink-0 ${dropdownBancosAbierto ? 'rotate-180 text-[var(--color-primario)]' : ''}`}></i>
+                                                    </button>
+
+                                                    {dropdownBancosAbierto && (
+                                                        <div className="absolute top-full left-0 mt-2 w-full sm:w-60 bg-[var(--color-header)] border border-[var(--border-color)] rounded-2xl shadow-[0_20px_45px_-10px_rgba(0,0,0,0.2)] z-[60] overflow-hidden p-1.5 origin-top animate-[fade-slide-down_0.16s_ease-out_forwards]">
+                                                            {bancosOcultos.map(b => {
+                                                                const idBan = b.entidadID || b.EntidadID;
+                                                                const nombreBan = b.nombre || b.Nombre;
+                                                                const claseDot = obtenerColorDot(nombreBan);
+                                                                const isSel = bancoSeleccionado === idBan;
+                                                                return (
+                                                                    <button
+                                                                        key={idBan}
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setBancoSeleccionado(idBan);
+                                                                            setDropdownBancosAbierto(false);
+                                                                        }}
+                                                                        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150 ${
+                                                                            isSel
+                                                                                ? 'bg-[var(--color-primario)]/10 text-[var(--color-primario)]'
+                                                                                : 'text-[var(--texto-principal)] hover:bg-[var(--color-fondo-app)]'
+                                                                        }`}
+                                                                    >
+                                                                        <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${claseDot}`}></span>
+                                                                        <span className="flex-1 text-left truncate">{nombreBan}</span>
+                                                                        {isSel && <i className="fa-solid fa-check text-[var(--color-primario)] text-xs flex-shrink-0"></i>}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                    
+                                                    {isHiddenSelected && !dropdownBancosAbierto && (
+                                                        <div className="absolute -top-2 -right-2 w-5 h-5 bg-[var(--color-primario)] border-2 border-[var(--color-header)] rounded-full flex items-center justify-center shadow-md animate-[popCheck_0.3s_ease-out_forwards] z-20">
                                                             <i className="fa-solid fa-check text-white text-[9px]"></i>
                                                         </div>
                                                     )}
-                                                </button>
-                                            );
-                                        })
+                                                </div>
+                                            )}
+                                        </>
                                     )}
                                 </div>
                             </div>
@@ -306,7 +386,7 @@ const VentaYape = () => {
                                     {cargando ? (
                                         <><i className="fa-solid fa-spinner fa-spin text-xl"></i> PROCESANDO...</>
                                     ) : (
-                                        <><i className="fa-solid fa-qrcode text-xl"></i> CONFIRMAR VENTA DIGITAL</>
+                                        <><i className="fa-solid fa-qrcode text-xl"></i> CONFIRMAR VENTA</>
                                     )}
                                 </button>
                             </div>
@@ -327,6 +407,10 @@ const VentaYape = () => {
                         @keyframes popCheck {
                             0% { transform: scale(0); }
                             100% { transform: scale(1); }
+                        }
+                        @keyframes fade-slide-down {
+                            from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+                            to { opacity: 1; transform: translateY(0) scale(1); }
                         }
                     `}
                 </style>

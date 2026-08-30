@@ -133,11 +133,11 @@ const VentaTransferencia = () => {
                 }}
             />
 
-            <section className={`animate-fade-in w-full pb-4 pt-4 transition-opacity duration-500 ${cajaAbierta ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
+            <section className={`animate-fade-in w-full pb-10 lg:pb-12 pt-4 lg:pt-6 transition-opacity duration-500 ${cajaAbierta ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
                 
-                <div className="relative flex flex-col lg:flex-row gap-6 lg:gap-6 max-w-[1100px] mx-auto">
+                <div className="relative flex flex-col lg:flex-row gap-6 lg:gap-6 max-w-[1100px] mx-auto mt-4 lg:mt-0">
                     
-                    <div className="absolute -top-12 left-10 w-24 z-50 pointer-events-none">
+                    <div className="absolute -top-10 lg:-top-12 left-4 lg:left-10 w-20 lg:w-24 z-50 pointer-events-none">
                          <img src={gatitoGif} alt="Gatito caminando" className="w-full h-auto mix-blend-multiply contrast-125 animate-[caminarGatito_60s_linear_infinite]" />
                     </div>
 

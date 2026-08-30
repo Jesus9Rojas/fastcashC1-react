@@ -47,9 +47,9 @@ const Header = ({ toggleSidebar, isMobileOpen }) => {
                 const estadoReal = res.data.estado || res.data.Estado;
                 setCajaAbierta(estadoReal === 'ABIERTO');
             } catch (e) {
-                console.error("Error verificando caja", e);
-                setCajaAbierta(false);
-            }
+    console.error("Error al verificar estado de la caja:", e);
+    setCajaAbierta(false);
+}
         };
         if (usuario) verificarCaja();
     }, [usuario, setCajaAbierta]);
@@ -129,16 +129,16 @@ const Header = ({ toggleSidebar, isMobileOpen }) => {
     const temaSeleccionado = TEMAS.find(t => t.id === temaActual);
 
     return (
-        <header className="h-[75px] bg-[var(--color-header)] flex justify-between items-center px-4 md:px-8 border-b border-[var(--border-color)] z-40 shrink-0 transition-colors duration-300">
+        <header className="h-[75px] bg-[var(--color-header)] flex justify-between items-center px-3 sm:px-6 border-b border-[var(--border-color)] z-40 shrink-0 transition-colors duration-300">
 
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-1 sm:gap-4">
                 <button
-                    className="w-11 h-11 flex flex-col justify-center items-center gap-1.5 rounded-full text-[var(--texto-secundario)] hover:bg-[var(--color-fondo-app)] hover:text-[var(--color-primario)] transition-all duration-300 focus:outline-none"
+                    className="w-10 h-10 sm:w-11 sm:h-11 flex flex-col justify-center items-center gap-1.5 rounded-full text-[var(--texto-secundario)] hover:bg-[var(--color-fondo-app)] hover:text-[var(--color-primario)] transition-all duration-300 focus:outline-none"
                     onClick={toggleSidebar}
                     aria-label="Alternar menú"
                 >
                     <span className={`block w-5 h-[2px] bg-current rounded-full transition-transform duration-300 ${isMobileOpen ? 'translate-y-[8px] rotate-45' : ''}`}></span>
-                    <span className={`block w-4 h-[2px] bg-current rounded-full transition-opacity duration-300 self-start ml-3 ${isMobileOpen ? 'opacity-0' : ''}`}></span>
+                    <span className={`block w-4 h-[2px] bg-current rounded-full transition-opacity duration-300 self-start ml-2.5 sm:ml-3 ${isMobileOpen ? 'opacity-0' : ''}`}></span>
                     <span className={`block w-5 h-[2px] bg-current rounded-full transition-transform duration-300 ${isMobileOpen ? '-translate-y-[8px] -rotate-45' : ''}`}></span>
                 </button>
 
@@ -146,7 +146,7 @@ const Header = ({ toggleSidebar, isMobileOpen }) => {
 
                 <div className="relative" ref={temaRef}>
                     <button
-                        className={`w-11 h-11 flex justify-center items-center rounded-full text-lg transition-all focus:outline-none ${menuTemaActivo ? 'bg-[var(--color-fondo-app)] text-[var(--color-primario)] shadow-inner' : 'text-[var(--texto-secundario)] hover:bg-[var(--color-fondo-app)] hover:text-[var(--texto-principal)]'}`}
+                        className={`w-10 h-10 sm:w-11 sm:h-11 flex justify-center items-center rounded-full text-[1.1rem] sm:text-lg transition-all focus:outline-none ${menuTemaActivo ? 'bg-[var(--color-fondo-app)] text-[var(--color-primario)] shadow-inner' : 'text-[var(--texto-secundario)] hover:bg-[var(--color-fondo-app)] hover:text-[var(--texto-principal)]'}`}
                         onClick={() => setMenuTemaActivo(!menuTemaActivo)}
                         title="Cambiar Tema"
                     >
@@ -178,9 +178,9 @@ const Header = ({ toggleSidebar, isMobileOpen }) => {
                 </div>
             </div>
 
-            <div className="flex items-center gap-3 sm:gap-5">
+            <div className="flex items-center gap-2 sm:gap-4">
 
-                <div className="hidden md:flex items-center gap-3 bg-[var(--color-fondo-app)] border border-[var(--border-color)] rounded-2xl px-4 py-2 transition-colors duration-300">
+                <div className="hidden lg:flex items-center gap-3 bg-[var(--color-fondo-app)] border border-[var(--border-color)] rounded-2xl px-4 py-2 transition-colors duration-300">
                     <div className="flex items-center gap-2 text-[var(--texto-secundario)]">
                         <i className="fa-regular fa-calendar text-xs"></i>
                         <span className="text-[11px] font-bold uppercase tracking-widest">{fechaActual}</span>
@@ -194,33 +194,29 @@ const Header = ({ toggleSidebar, isMobileOpen }) => {
 
                 {!cajaAbierta ? (
                     <button
-                        className="group flex items-center gap-3 pr-4 sm:pr-5 py-2 pl-2 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:shadow-none outline-none"
+                        className="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[12px] sm:text-sm shadow-md transition-all outline-none"
                         onClick={handleAbrirCaja}
                         disabled={abriendo}
                     >
-                        <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                            <i className={`fa-solid ${abriendo ? 'fa-spinner fa-spin' : 'fa-box-open'} text-sm`}></i>
-                        </span>
-                        <span className="hidden sm:inline">{abriendo ? 'Abriendo...' : 'Abrir Caja'}</span>
+                        <i className={`fa-solid ${abriendo ? 'fa-spinner fa-spin' : 'fa-box-open'} text-[14px] sm:text-base`}></i>
+                        <span>{abriendo ? 'Abriendo...' : 'Abrir Caja'}</span>
                     </button>
                 ) : (
-                    <div className="flex items-center gap-2.5 pr-4 sm:pr-5 py-2 pl-2 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
-                        <span className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
-                            <i className="fa-solid fa-check text-white text-xs"></i>
-                        </span>
-                        <span className="hidden sm:inline text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm tracking-wide">Caja Abierta</span>
+                    <div className="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-[12px] sm:text-sm shadow-md cursor-default">
+                        <i className="fa-solid fa-check-circle text-[14px] sm:text-base"></i>
+                        <span>Caja Abierta</span>
                     </div>
                 )}
 
-                <div className="w-px h-6 bg-[var(--border-color)]"></div>
+                <div className="hidden sm:block w-px h-6 bg-[var(--border-color)]"></div>
 
                 <button
-                    className="group w-11 h-11 sm:w-auto sm:px-4 sm:py-2.5 rounded-full sm:rounded-2xl bg-red-50 dark:bg-red-500/10 hover:bg-red-500 text-red-600 dark:text-red-400 hover:text-white border border-red-100 dark:border-red-500/20 hover:border-red-500 transition-all flex items-center justify-center gap-2 outline-none"
+                    className="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-2.5 rounded-xl bg-[#E60023] hover:bg-[#cc001f] text-white font-bold text-[12px] sm:text-sm shadow-md transition-all outline-none"
                     onClick={() => { logout(); navigate('/login'); }}
                     title="Cerrar Sesión"
                 >
-                    <i className="fa-solid fa-arrow-right-from-bracket text-sm transition-transform group-hover:translate-x-0.5"></i>
-                    <span className="hidden sm:inline font-bold text-sm tracking-wide">Salir</span>
+                    <i className="fa-solid fa-power-off text-[14px] sm:text-base"></i>
+                    <span>Salir</span>
                 </button>
             </div>
         </header>
